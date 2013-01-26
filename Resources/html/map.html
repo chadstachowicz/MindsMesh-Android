@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+<title>Google Maps JavaScript API v3 Example: Polygon Simple</title>
+<link href="http://code.google.com/apis/maps/documentation/javascript/examples/default.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+ 
+ 
+<script type="text/javascript">
+ 
+  var marker;
+  var map;
+ 
+  function initialize() {
+    var myLatLng = new google.maps.LatLng(35.306248, -80.732431);
+    var myOptions = {
+      zoom: 16,
+      center: myLatLng,
+      streetViewControl: false,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+ 
+   map = new google.maps.Map(document.getElementById("map_canvas"),
+        myOptions);
+  }
+
+</script>
+ 
+ 
+</head>
+<body onload="initialize()">
+ 
+ 
+<div id="map_canvas"></div>
+ 
+ 
+</body>
+</html>
