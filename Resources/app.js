@@ -13,7 +13,7 @@ var menuWindow = Ti.UI.createWindow({
     top:0,
     backgroundColor:"#e2e7ed",
     left:0,
-    width:260
+    width:Titanium.Platform.displayCaps.platformWidth
 });
 //// ---- Menu Table
 // Menu Titles
@@ -22,7 +22,9 @@ var menuWindow = Ti.UI.createWindow({
 // Tableview
 var menuTableView = Ti.UI.createTableView({
     backgroundColor:'#252525',
-    separatorColor: '#000'
+    separatorColor: '#000',
+    width: 260,
+    left:0
 });
 
 var menuMoodle = [];
@@ -266,14 +268,13 @@ function redirectAfterLogin() {
 						var win1 = Titanium.UI.createWindow({  
     						title:'Single Post',
     						url:'source_both/post.js',
-    						navGroup: win.navGroup,
     						backgroundColor:'#ecfaff',
     						barColor: '#46a546'
 						});
 						win1.postid = user.target_id;
 						win1.fullname = user.user.name;
 						win1.photo_url = user.user.photo_url;
-						navGroup.open(win1,{animated:false});
+						win1.open();
 					}
 					xhr.send();
    			 }		
@@ -317,29 +318,18 @@ var win1 = Titanium.UI.createWindow({
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
     			 });
-if(Titanium.Platform.osname == 'iphone' || Titanium.Platform.osname == 'ipad'){
 if (Titanium.App.Properties.getString("num_entities") == 0){
 
-var navGroup = Ti.UI.iPhone.createNavigationGroup({
-    window:win4
-});
-win4.navGroup = navGroup;
+navWindow = win4;
+
 } else if (Titanium.App.Properties.getString("num_entities") > 0 && Titanium.App.Properties.getString("moodle_entity_id") != false && Titanium.App.Properties.getString("num_topics") == 0){
 	
-	var navGroup = Ti.UI.iPhone.createNavigationGroup({
-    window:win9
-});
-win9.navGroup = navGroup;
+navWindow = win9;
+
 } else {
-var navGroup = Ti.UI.iPhone.createNavigationGroup({
-    window:win1
-});
-win1.navGroup = navGroup;
+navWindow = win1;
 }
-navWindow.add(navGroup);
-} else {
-	navWindow = win1;
-}
+
 navWindow.open();
 menuTableView.addEventListener('click', function(e)
 {
@@ -373,29 +363,31 @@ Titanium.App.addEventListener('loadFeed', function(e)
 	var win2 = Titanium.UI.createWindow({  
    					url:'source_both/feed.js',
     				barColor: '#46a546',
-    				navGroup: navGroup,
    	    			backgroundColor:"#46a546",
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
     			 });
-        		navGroup.open(win2,{animated:false});
-				Titanium.App.fireEvent('main-win-close');
+    			Titanium.App.fireEvent('main-win-close');
+        		win2.open();
+        		navWindow = win2;
+				
 });
 Titanium.App.addEventListener('loadTopic', function(e)
 {   
 	var win7 = Titanium.UI.createWindow({  
-    			navGroup: navGroup,
    	    		backgroundColor:'#46a546',
     			url:'source_both/topic_feed.js',
     			barColor: '#46a546',
     			moving:false, // Custom property for movement
        			axis:0 // Custom property for X axis
 	});
+	Titanium.App.fireEvent('main-win-close');
 				win7.class_id = class_id;
 				win7.moodle = moodle;
 				win7.class_number = class_number;
-				navGroup.open(win7,{animated:false});
-				Titanium.App.fireEvent('main-win-close');
+				win7.open();
+				navWindow = win7;
+				
 });
 Titanium.App.addEventListener('touch-slide', function(e)
 {   
@@ -427,49 +419,37 @@ Titanium.App.addEventListener('nav-menu-button', function(e)
         	 	var win2 = Titanium.UI.createWindow({  
    					url:'source_both/feed.js',
     				barColor: '#46a546',
-    				navGroup: navGroup,
    	    			backgroundColor:"#46a546",
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
     			 });
-        		navGroup.open(win2,{animated:false});
 				Titanium.App.fireEvent('main-win-close');
-			} else if(menu_id == 2) {
-        	 	var win2 = Titanium.UI.createWindow({  
-    				title:'Classes',
-   					url:'source_both/topics.js',
-    				barColor: '#46a546',
-    				navGroup: navGroup,
-   	    			backgroundColor:"#e2e7ed",
-       				moving:false, // Custom property for movement
-       				axis:0 // Custom property for X axis
-    			 });
-        		navGroup.open(win2,{animated:false});
-				Titanium.App.fireEvent('main-win-close');
+				win2.open();
+				navWindow = win2;
 			} else if(menu_id == 4) {
         	 	var win4 = Titanium.UI.createWindow({  
     				title:'Verify Email',
    					url:'source_both/join_school.js',
     				barColor: '#46a546',
-    				navGroup: navGroup,
    	    			backgroundColor:"#e2e7ed",
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
     			 });
-        		navGroup.open(win4,{animated:false});
 				Titanium.App.fireEvent('main-win-close');
+				win4.open();
+				navWindow = win4;
 			} else if(menu_id == 5) {
         	 	var win5 = Titanium.UI.createWindow({  
     				title:'Moodle',
    					url:'source_both/moodle_account.js',
     				barColor: '#46a546',
-    				navGroup: navGroup,
    	    			backgroundColor:"#e2e7ed",
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
     			 });
-        		navGroup.open(win5,{animated:false});
 				Titanium.App.fireEvent('main-win-close');
+				win5.open();
+				navWindow = win5;
 			} else if(menu_id == 6) {
 				
 				var dlg = Titanium.UI.createAlertDialog({
@@ -480,7 +460,6 @@ Titanium.App.addEventListener('nav-menu-button', function(e)
    				 if (ev.index == 0) { 
    				 	Titanium.Facebook.logout();
 				reopenLogin();
-				navGroup.close();
 				menuWindow.close();
 				Titanium.App.fireEvent('main-win-close');
 				navWindow.close();
@@ -491,53 +470,53 @@ Titanium.App.addEventListener('nav-menu-button', function(e)
  			 dlg.show();
 			} else if(menu_id == 7) {
 				var win7 = Titanium.UI.createWindow({  
-    			navGroup: navGroup,
    	    		backgroundColor:'#46a546',
     			url:'source_both/topic_feed.js',
     			barColor: '#46a546',
     			moving:false, // Custom property for movement
        			axis:0 // Custom property for X axis
 				});
+				Titanium.App.fireEvent('main-win-close');
 				win7.class_id = class_id;
 				win7.moodle = moodle;
 				win7.class_number = class_number;
-				navGroup.open(win7,{animated:false});
-				Titanium.App.fireEvent('main-win-close');
+				win7.open();
+				navWindow = win7;
 			} else if(menu_id == 8) {
 				var win8 = Titanium.UI.createWindow({  
     				title:'Search Classes',
    	 				url:'source_both/search_topics.js',
-   	 				navGroup: navGroup,
    	 				backgroundColor:'#ecfaff',
    	 				layout:'absolute',
    	 				barColor: '#46a546',
    	 				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
 				});
-				navGroup.open(win8,{animated:false});
 				Titanium.App.fireEvent('main-win-close');
+				win8.open();
+				navWindow = win8;
 			} else if(menu_id == 9) {
 				var win1 = Titanium.UI.createWindow({
    	 					url:'source_both/campus_map.js',
    	 					backgroundColor:'#ecfaff',
-   	 					navGroup: navGroup,
    	 					layout:'absolute',
    	 					barColor: '#46a546'
 				});
-				navGroup.open(win1,{animated:false});
 				Titanium.App.fireEvent('main-win-close');
+				win1.open();
+				navWindow = win1;
 			} else if(menu_id == 10) {
         	 	var win9 = Titanium.UI.createWindow({  
     				title:'Moodle Account',
    					url:'source_both/moodle_account.js',
     				barColor: '#46a546',
-    				navGroup: navGroup,
    	    			backgroundColor:"#e2e7ed",
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
     			 });
-        		navGroup.open(win9,{animated:false});
 				Titanium.App.fireEvent('main-win-close');
+				win9.open();
+				navWindow = win9;
 			}
         });
         navWindow.animate(navAnimate);
@@ -602,14 +581,15 @@ win.add(pict);
 if(Titanium.Platform.osname == 'iphone'){
 	win.add(Titanium.Facebook.createLoginButton({
 		style:Ti.Facebook.BUTTON_STYLE_WIDE,
-		bottom:30
+		bottom:30,
+		width:'auto'
 	}));
 }
 else{
 	win.add(Titanium.Facebook.createLoginButton({
 		style:Ti.Facebook.BUTTON_STYLE_WIDE,
 		height:40,
-		width: 100,
+		width: 'auto',
 		bottom:50
 	}));
 }

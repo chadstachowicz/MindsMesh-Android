@@ -25,7 +25,7 @@ function createHttpClient(mode,url,data,header)
 	}
 	xhr.onerror = function requestFailed(e) 
 	{
-		alert(e);
+	//	alert(e);
 		errorHTTPClient(xhr, mode, url, data, e, L("Comms Error Message"));
 	};
 	return xhr;

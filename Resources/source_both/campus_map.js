@@ -1,6 +1,21 @@
 Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
 win.layout = 'vertical';
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				left: 0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 var htmlFile = '../html/map.html';
 var wv = Ti.UI.createWebView({
     url: htmlFile,
@@ -9,8 +24,8 @@ var wv = Ti.UI.createWebView({
 	barColor:"#808080",
 	//showCancel:true,
 	hintText: 'Search Locations',
-	height:43,
-	top:0
+	height:'40dip',
+
 });
 var winModal = Ti.UI.createWindow({
         backgroundColor : '#B0000000',
@@ -52,7 +67,7 @@ var winModal = Ti.UI.createWindow({
 			win1.fullname = Titanium.App.Properties.getString("name");
 			win1.photo_url = Titanium.App.Properties.getString("photo_url");
 			winModal.hide();
-			win.navGroup.open(win1,{animated:false});
+			win1.open();
 			} else if (e.source.type == "Topic"){
 				Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:7, class_id: e.source.id});
 			}
@@ -106,9 +121,17 @@ var winModal = Ti.UI.createWindow({
    		 winModal.add(view);
 var menuButton = Ti.UI.createButton({
     image:'../images/Paragraph-Justify.png',
-    toggle:false // Custom property for menu toggle
+    toggle:false,
+    height: 30,
+    width:30,
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	left: 10
+
 });
-win.setLeftNavButton(menuButton);
+bar.add(menuButton);
 
 menuButton.addEventListener('click', function(e){
 	if(menuButton.toggle == false)
@@ -128,7 +151,7 @@ Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
 Titanium.App.addEventListener('main-win-close', function(e)
 {
 	winModal.close();
-	win.navGroup.close(win);
+	win.close();
 });
 
 
@@ -168,7 +191,7 @@ xhr.onload = function(){
     		width:25,
 		});
 	}
-	win.setTitleControl(notificationButton);
+	bar.add(notificationButton);
 	win.title = "Feed";
 		for (var i = 0; i < user.unread.length; ++i) {
 			var classNumber = Titanium.UI.createLabel({
@@ -285,8 +308,14 @@ xhr.send()
 
 var btnCreate = Titanium.UI.createButton({
 	image:'../images/Marker.png',
-	height: 'auto',
-	width: 20
+    height: 30,
+    width:30,
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	right: 10
+	
 });
 function currentLocation(latitude,longitude){
 
@@ -305,7 +334,7 @@ btnCreate.addEventListener('click', function(e){
 	});
 
 })
-win.setRightNavButton(btnCreate);	
+bar.add(btnCreate);	
 
 //var location = Ti.Map.createAnnotation({
      //   latitude: geoEvent.latitude,

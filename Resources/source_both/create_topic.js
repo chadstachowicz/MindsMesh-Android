@@ -165,7 +165,7 @@ btnCreate.addEventListener('click', function(e){
 		xhr.onload = function(){
 			var response = this.responseText;
 			var test = JSON.parse(response);
-			win.navGroup.close(win);
+			win.close();
 		};
 		xhr.send(JSON.stringify(postData));
 		

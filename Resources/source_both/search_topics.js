@@ -1,5 +1,21 @@
 Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				zIndex: 1,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 var menuButton = Ti.UI.createButton({
     image:'../images/Paragraph-Justify.png',
     toggle:false // Custom property for menu toggle
@@ -15,7 +31,7 @@ Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
 });
 Titanium.App.addEventListener('main-win-close', function(e)
 {
-	win.navGroup.close(win);
+	win.close();
 });
 var add_button =  Titanium.UI.createButton({
 		systemButton:Titanium.UI.iPhone.SystemButton.ADD
@@ -30,7 +46,7 @@ add_button.addEventListener('click', function(e){
    	 	layout:'absolute',
    	 	barColor: '#46a546'
 	});
-	win.navGroup.open(win1,{animated:false});
+	win1.open();
 });
 var search = Titanium.UI.createSearchBar({
 	barColor:"#808080",
@@ -97,10 +113,8 @@ search.addEventListener('return', function(e)
 	xhr.send(JSON.stringify(postData));
 
 	search.blur();
-	if(Titanium.Platform.name == 'iPhone OS'){
-	
-		win.setRightNavButton(add_button);
 
-		}
+		bar.add(add_button);
+
 });
 

@@ -21,7 +21,7 @@ Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
 });
 Titanium.App.addEventListener('main-win-close', function(e)
 {
-	win.navGroup.close(win);
+	win.close();
 });
 
 var data = [];
@@ -38,10 +38,9 @@ btnPost.addEventListener('click', function(e){
 				var win1 = Titanium.UI.createWindow({  
    							url:'finish_verification.js',
     						barColor: '#46a546',
-    						navGroup: win.navGroup,
    	    					backgroundColor:"#e2e7ed"
     			 		});
-				win.navGroup.open(win1,{animated:false});
+				win1.open();
 
 			};
 			xhr.send(JSON.stringify(postData));	
@@ -107,11 +106,10 @@ ta1.addEventListener('return', function(e)
 				var win1 = Titanium.UI.createWindow({  
    							url:'finish_verification.js',
     						barColor: '#46a546',
-    						navGroup: win.navGroup,
    	    					backgroundColor:"#e2e7ed"
     			 		});
     			 		alert('test');
-				win.navGroup.open(win1,{animated:false});
+				win1.open();
 
 			};
 			xhr.send(JSON.stringify(postData));

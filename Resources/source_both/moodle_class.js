@@ -1,6 +1,21 @@
 Ti.include("model/api.js");
 
 var win = Titanium.UI.currentWindow;
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 var winModal = Ti.UI.createWindow({
         backgroundColor : '#B0000000',
         visible: false
@@ -41,7 +56,7 @@ var winModal = Ti.UI.createWindow({
 			win1.fullname = Titanium.App.Properties.getString("name");
 			win1.photo_url = Titanium.App.Properties.getString("photo_url");
 			winModal.hide();
-			win.navGroup.open(win1,{animated:false});
+			win1.open();
 			} else if (e.source.type == "Topic"){
 				Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:7, class_id: e.source.id});
 			}
@@ -94,34 +109,60 @@ var winModal = Ti.UI.createWindow({
 		 view.add(modalTableView);
    		 winModal.add(view);
 var grades_button =  Titanium.UI.createButton({
-		title:'Grades',
+	title:'Grades',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	right: 10
+});
+var refresh_button =  Titanium.UI.createButton({
+	title:'Refresh',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	left: 10
 });
 var regex = /course\/view\.php\?id=(\d+)/;
 gradesid = regex.exec(win.Moodurl);
 
-if(Titanium.Platform.name == 'iPhone OS'){
-	
-win.setRightNavButton(grades_button);
+bar.add(grades_button);
 
-}
 grades_button.addEventListener('click', function(e){
 	var win1 = Titanium.UI.createWindow({  
-    					title:"Grades",
+    					url: 'grade_view.js',
    	 					backgroundColor:'#ecfaff',
-   	 					layout:'absolute',
    	 					barColor: '#46a546'
 						});
+   var postData = {username: Titanium.App.Properties.getString('moodle-user'), password: Titanium.App.Properties.getString('moodle-pass')};	
+  	xhr = postLoginToMoodle(Titanium.App.Properties.getString("moodle_url"),postData);
+  	xhr.autoRedirect = false;
+  	xhr.clearCookies('uncc.edu');
+	xhr.onload = function(){
+	}
+	xhr.onreadystatechange = function () {
+		var regex = /MoodleSession/;
+		found = regex.exec(xhr.getResponseHeader("Set-Cookie"));
+		if (found != null){
+					win1.url = 'http://moodle.uncc.edu/grade/report/index.php?id=' + gradesid[1];
+					win1.cookie = xhr.getResponseHeader("Set-Cookie");
+					win1.open();
 
-					url2 = 'https://moodle.uncc.edu/grade/report/index.php?id=' + gradesid[1]
-					var webview = Titanium.UI.createWebView({url:url2});
-					win1.add(webview);
-					win.navGroup.open(win1,{animated:false});
-
+					
+				}
+	}
+	xhr.send(postData);
 });
 var tableview = Titanium.UI.createTableView({
 	backgroundColor:'#ecfaff',
 	editable: 'true',
-	deleteButtonTitle: 'Leave class'
+	deleteButtonTitle: 'Leave class',
+	top:44
 });
 win.add(tableview);
 
@@ -385,13 +426,44 @@ tableview.addEventListener('click', function(e)
     					title:e.source.hiddenTitle,
    	 					backgroundColor:'#ecfaff',
    	 					layout:'absolute',
-   	 					barColor: '#46a546'
+   	 					barColor: '#46a546',
+   	 					modal:true
 						});
-
-					url2 = e.source.FileUrl;
-					var webview = Titanium.UI.createWebView({url:url2});
-					win1.add(webview);
-					win.navGroup.open(win1,{animated:false});
+						
+					var regex = /(https:\/\/)(.+)/
+					var hits = regex.exec(e.source.FileUrl);
+					url2 = hits[1] + Titanium.App.Properties.getString("moodle-user") + ':' + Titanium.App.Properties.getString("moodle-pass") + '@' + hits[2];
+					var xhr = Titanium.Network.createHTTPClient({enableKeepAlive:false, timeout:6000});
+					xhr.retries = 0;
+					xhr.open('GET',url2);
+					xhr.onload = function(){
+						try{
+							var intent = Ti.Android.createIntent({
+							action: Ti.Android.ACTION_VIEW,
+							type: "application/pdf",
+							data: this.responseData
+							});	
+							Ti.Android.currentActivity.startActivity(intent);
+						} catch (err) {
+							var alertDialog = Titanium.UI.createAlertDialog({
+                			title: 'No PDF Viewer',
+               				 message: 'We tried to open a PDF but failed. Do you want to search the marketplace for a PDF viewer?',
+                			buttonNames: ['Yes','No'],
+                			cancel: 1
+            			});
+            			alertDialog.show();
+            			alertDialog.addEventListener('click', function(evt) {
+                			if (evt.index == 0) {
+                    			Ti.Platform.openURL('http://search?q=pdf');
+                			}
+            			});
+            								}
+						}
+xhr.send();
+				
+					
+			//		win1.add(webview);
+				//	win1.open();
 		
 });
 win.addEventListener('focus', function() 

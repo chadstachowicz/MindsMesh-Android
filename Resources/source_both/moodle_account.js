@@ -1,11 +1,33 @@
 Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
-win.layout = 'vertical';
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 var menuButton = Ti.UI.createButton({
     image:'../images/Paragraph-Justify.png',
-    toggle:false // Custom property for menu toggle
+    toggle:false,
+    height: 30,
+    width:30,
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	left: 10
+
 });
-win.setLeftNavButton(menuButton);
+bar.add(menuButton);
 
 menuButton.addEventListener('click', function(e){
 	if(menuButton.toggle == false)
@@ -24,20 +46,26 @@ Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
 });
 Titanium.App.addEventListener('main-win-close', function(e)
 {
-	win.navGroup.close(win);
+	win.close();
 });
 
 var btnCreate = Titanium.UI.createButton({
 	title:'Verify',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	right: 10
 });
-
-win.setRightNavButton(btnCreate);
+bar.add(btnCreate);
 
 
 
 var importWiz = Titanium.UI.createButton({
             		title: 'Start Import Wizard',
-            		top: 17,
+            		top: 210,
             		width: 230,
 					height: 30,
 					backgroundColor: '#46a546',
@@ -55,11 +83,10 @@ var importWiz = Titanium.UI.createButton({
     				title:'Select Classes',
    	 				url:'moodle_add_classes.js',
    	 				backgroundColor:'#ecfaff',
-   	 				navGroup: win.navGroup,
    	 				layout:'absolute',
    	 				barColor: '#46a546'
 					});
-					win.navGroup.open(win1,{animated:false});
+					win1.open();
 					}
 					});
 					importWiz.addEventListener('touchstart', function(){
@@ -182,7 +209,7 @@ var label1 = Titanium.UI.createLabel({
 var ta1 = Titanium.UI.createTextField({
 	value: Titanium.App.Properties.getString('moodle-user'),
 	hintText:"Moodle Username",
-	top: 5,
+	top: 50,
 	height:40,
 	width: 320,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
@@ -190,7 +217,7 @@ var ta1 = Titanium.UI.createTextField({
 });
 var label2 = Titanium.UI.createLabel({
 	text: 'Moodle Password',
-	top: 5,
+	top: 95,
 	height:40,
 	width: 320,
 	
@@ -199,7 +226,7 @@ var ta2 = Titanium.UI.createTextField({
 	value: Titanium.App.Properties.getString('moodle-pass'),
 	hintText:"Moodle Password",
 	passwordMask: true,
-	top: 5,
+	top: 140,
 	height:40,
 	width: 320,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
@@ -216,15 +243,15 @@ var ta2 = Titanium.UI.createTextField({
 	var ta1 = Titanium.UI.createTextField({
 	value: Titanium.App.Properties.getString('moodle-user'),
 	hintText:"Moodle Username",
-	top: 10,
+	top: 60,
 	height:40,
 	width: 750,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 	
 });
 var label2 = Titanium.UI.createLabel({
-	text: 'Moodle Username',
-	top: 10,
+	text: 'Moodle Password',
+	top: 110,
 	height:40,
 	width: 320,
 	
@@ -233,14 +260,13 @@ var ta2 = Titanium.UI.createTextField({
 	value: Titanium.App.Properties.getString('moodle-pass'),
 	hintText:"Moodle Password",
 	passwordMask: true,
-	top: 10,
+	top: 160,
 	height:40,
 	width: 750,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 	
 });
 }
-
 
 btnCreate.addEventListener('click', function(e){
 		if(ta1.value.length < 4)
@@ -286,11 +312,10 @@ function redirectToWizard(){
     				title:' Select Classes',
    	 				url:'moodle_add_classes.js',
    	 				backgroundColor:'#ecfaff',
-   	 				navGroup: win.navGroup,
    	 				layout:'absolute',
    	 				barColor: '#46a546'
 				});
-				win.navGroup.open(win1,{animated:false});
+				win1.open();
 				} else {
 					alert("Your moodle credentials were good, enjoy!")
 					ta1.blur();

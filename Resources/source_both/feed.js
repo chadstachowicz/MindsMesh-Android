@@ -1,6 +1,21 @@
 Ti.include("model/api.js");
 var offset = 0;
 var win = Titanium.UI.currentWindow;
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 var winModal = Ti.UI.createWindow({
         backgroundColor : '#B0000000',
         visible: false
@@ -35,13 +50,14 @@ var winModal = Ti.UI.createWindow({
     			url:'post.js',
     			backgroundColor:'#ecfaff',
     			barColor: '#46a546',
-    			notModal: winModal
+    			notModal: winModal,
+    			modal: true
 			});
 			win1.postid = e.source.id;
 			win1.fullname = Titanium.App.Properties.getString("name");
 			win1.photo_url = Titanium.App.Properties.getString("photo_url");
 			winModal.hide();
-			win.navGroup.open(win1,{animated:false});
+			win1.open();
 			} else if (e.source.type == "Topic"){
 				Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:7, class_id: e.source.id});
 			}
@@ -95,37 +111,23 @@ var winModal = Ti.UI.createWindow({
    		 winModal.add(view);
 var tableView = Titanium.UI.createTableView({
 	backgroundColor:'#46a546',
-	separatorStyle: 'none'
+	separatorColor: 'transparent',
+	left:0,
+	top:44,
 });
-var scrollView = Ti.UI.createScrollView({
-            contentHeight : 'auto',
-            layout : 'vertical',
-            showVerticalScrollIndicator: true
-            });
-//win.addEventListener('touchstart', function(e){
- //    Get starting horizontal position
- ///	alert("test2");
- //   e.source.axis = parseInt(e.x);
-//});
-//win.addEventListener('touchmove', function(e){
- //    Subtracting current position to starting horizontal position
-   // var coordinates = parseInt(e.globalPoint.x) - e.source.axis;
-   // alert("test3");
-   // //Detecting movement after a 20px shift
-  //  if(coordinates > 20 || coordinates < -20){
-    //    e.source.moving = true;
-  //  }
-    // Locks the window so it doesn't move further than allowed
-//    if(e.source.moving == true && coordinates <= 260 && coordinates >= 0){
-        // This will smooth the animation and make it less jumpy
-//		Titanium.App.fireEvent('touch-slide',{cords:coordinates});
-//    }
-//});
 var menuButton = Ti.UI.createButton({
- 	image:'../images/Paragraph-Justify.png',
-    toggle:false // Custom property for menu toggle
+    image:'../images/Paragraph-Justify.png',
+    toggle:false,
+    height: 30,
+    width:30,
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	left: 10
+
 });
-win.setLeftNavButton(menuButton);
+bar.add(menuButton);
 
 menuButton.addEventListener('click', function(e){
 	if(menuButton.toggle == false)
@@ -144,7 +146,7 @@ Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
 Titanium.App.addEventListener('main-win-close', function(e)
 {
 	winModal.close();
-	win.navGroup.close(win);
+	win.close();
 });
 
 
@@ -176,6 +178,7 @@ xhr.onload = function(){
     		top: 0,
     		left: 15
     	});
+    			alert("ewrwerwer");
     	notificationButton.add(label);
 	} else {
 		var notificationButton = Ti.UI.createButton({
@@ -184,7 +187,7 @@ xhr.onload = function(){
     		width:25,
 		});
 	}
-	win.setTitleControl(notificationButton);
+	bar.add(notificationButton);
 	win.title = "Feed";
 		for (var i = 0; i < user.unread.length; ++i) {
 			var classNumber = Titanium.UI.createLabel({
@@ -312,14 +315,14 @@ xhr.send()
 			} else {
 				var win1 = Titanium.UI.createWindow({  
     			url:'post.js',
-    			navGroup: win.navGroup,
   				backgroundColor:'#fff',
-  				barColor: '#46a546'
+  				barColor: '#46a546',
+  				modal:true
 				});
 				win1.postid = e.rowData.result;
 				win1.fullname = e.rowData.fullname;
 				win1.photo_url = e.rowData.photo_url;
-				win.navGroup.open(win1,{animated:false});
+				win1.open();
 			}
 		
 		});
@@ -327,22 +330,29 @@ var brainlabel = [];
 
 var btnPost = Titanium.UI.createButton({
 	title:'Post',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	right: 10
 });
-if(Titanium.Platform.osname == 'iphone' || Titanium.Platform.osname == 'ipad'){
-win.setRightNavButton(btnPost);
-}
+
+bar.add(btnPost);
+
 
 btnPost.addEventListener('click', function(e){
 	var win1 = Titanium.UI.createWindow({  
     	title:'Got a Question?',
    	 	url:'make_post.js',
-   	 	navGroup: win.navGroup,
    	 	backgroundColor:'#ecfaff',
    	 	source: 'feed',
    	 	layout:'absolute',
-   	 	barColor: '#46a546'
+   	 	barColor: '#46a546',
+   	 	modal: true
 	});
-	win.navGroup.open(win1,{animated:false});
+	win1.open();
 
 });
 var lastRow = 0;
@@ -350,12 +360,13 @@ var lastRow = 0;
 var border = Ti.UI.createView({
 	backgroundColor:"#576c89",
 	height:2,
-	bottom:0
+	bottom:0,
+	width: Titanium.Platform.displayCaps.platformWidth
 });
 
 var tableHeader = Ti.UI.createView({
 	backgroundColor:"#e2e7ed",
-	width:320,
+	width: Titanium.Platform.displayCaps.platformWidth,
 	height:60
 });
 
@@ -425,17 +436,7 @@ tableHeader.add(arrow);
 tableHeader.add(statusLabel);
 tableHeader.add(lastUpdatedLabel);
 tableHeader.add(actInd);
-
-scrollView.add(tableHeader);
-scrollView.add(tableView);
-win.add(scrollView);
-var init = setInterval(function(e){
-            if (offset==60) {
-                clearInterval(init);
-            }
-            scrollView.scrollTo(0,60);
-        },100);
-
+win.add(tableView);
 
 var reloading = false;
 var updating = false;
@@ -514,62 +515,13 @@ win.addEventListener('focus', function()
 });
 
 var lastDistance = 0;
-scrollView.addEventListener('scroll',function(e)
+tableView.addEventListener('scroll',function(evt)
 {
-//	var height = tableView.height;
-//	var total = offset + height;
-//	var theEnd = e.contentSize.height;
-//	var distance = theEnd - total;
-
-	if (e.y!=null) {
-        offset = e.y;
+	 if (!pulling && !updating && !reloading && (evt.totalItemCount < evt.firstVisibleItem + evt.visibleItemCount + 3) && (row.length>=10)) {
+        beginUpdate();
     }
-        if (!pulling && !updating && !reloading && offset <= 5) {
-        var t = Ti.UI.create2DMatrix();
-        t = t.rotate(-180);
-        arrow.animate({
-            transform : t,
-            duration : 180
-        });
-        statusLabel.text = 'Release To Reload';
-    }
-    else if (!pulling && !updating && !reloading && offset > 5 && offset < 60) {             
-        var t = Ti.UI.create2DMatrix();
-        arrow.animate({
-            transform : t,
-            duration : 180
-        });
-        statusLabel.text = 'Pull To Refresh';
-    }
-    
-//	if (!pulling && !updating && !reloading && (distance < lastDistance) && (row.length>=10))
-//	{
-		// adjust the % of rows scrolled before we decide to start fetching
-//		var nearEnd = theEnd * .75;
-
-//		if (!pulling && !updating && !reloading && (total >= nearEnd))
-//		{
-//			beginUpdate();
-//		}
-//	} 
 });
 
-tableView.addEventListener('dragEnd', function()
-{	
-	if(pulling && !reloading && !updating)
-	{
-		reloading = true;
-		pulling = false;
-		arrow.hide();
-		actInd.show();
-		statusLabel.text = "Reloading...";
-		tableView.setContentInsets({top:60},{animated:true});
-		tableView.scrollToTop(-60,true);
-		arrow.transform=Ti.UI.create2DMatrix();
-		beginReloading();
-		reloadNotifications();
-	}
-});
 function beginUpdate()
 {
 	updating = true;
@@ -583,14 +535,12 @@ function beginUpdate()
 function endUpdate()
 {
 	actInd2.hide();
-	tableView.deleteRow(lastRow,{animationStyle:Titanium.UI.iPhone.RowAnimationStyle.NONE});
+	tableView.deleteRow(lastRow);
 	xhr = getPostsWithFamily(Titanium.App.Properties.getString('mmat'),lastRowId);
 	xhr.onload = function(){
     	onLoad(this.responseText);
     };
 	xhr.send();
-//	 just scroll down a bit to the new rows to bring them into view
-//	tableView.scrollToIndex(lastRow-1,{animated:true,position:Ti.UI.iPhone.TableViewScrollPosition.BOTTOM});
 
 }
 function likeButton(postid, labelid)
@@ -716,6 +666,7 @@ if (Titanium.Platform.osname == "iphone"){
 		backgroundColor: '#ecfaff',
 		top: 6,
 		width:Titanium.Platform.displayCaps.platformWidth - 10,
+		left: 5,
 		height:Ti.UI.SIZE,
 		layout:'vertical'
 	});
@@ -799,6 +750,7 @@ if (Titanium.Platform.osname == "iphone"){
         commentHolder[g] = Ti.UI.createView({
 		backgroundColor: '#ecfaff',
 		top: 15,
+		left: 15,
 		width:comWidth - 30,
 		height:Ti.UI.SIZE,
 		layout:'vertical'
@@ -853,12 +805,10 @@ if (Titanium.Platform.osname == "iphone"){
 			});
 			commentHolder[g].add(commentSpacer);
             if (Titanium.Platform.osname == "iphone"){
-            backHolder[g] = Ti.UI.createView({
+            backHolder = Ti.UI.createView({
 				borderRadius: 2,
 				backgroundColor:"#e2e7ed",
 				width:Titanium.Platform.displayCaps.platformWidth - 10,
-				height:'auto',
-				zIndex: -1,
 				height: 30,
 				bottom: 6,
 			});
@@ -880,8 +830,8 @@ if (Titanium.Platform.osname == "iphone"){
 					height:16,
 					width:16,
 				});
-				backHolder[g].add(paperclip);
-            	backHolder[g].add(attach);
+				backHolder.add(paperclip);
+            	backHolder.add(attach);
 			}
 			seperatorPhone[g] = Ti.UI.createView({
 				backgroundColor: "#808080",
@@ -889,12 +839,12 @@ if (Titanium.Platform.osname == "iphone"){
 				height:1,
 			});
 			} else {
-			backHolder[g] = Ti.UI.createView({
+			backHolder = Ti.UI.createView({
+				borderRadius: 2,
 				backgroundColor:"#e2e7ed",
 				width:comWidth - 30,
-				height:'auto',
-				zIndex: -1,
 				height: 42,
+				left: 15,
 				bottom: 6,
 			});
 			if (post.post_attachments.length > 0)
@@ -915,8 +865,8 @@ if (Titanium.Platform.osname == "iphone"){
 					height:32,
 					width:32,
 				});
-				backHolder[g].add(paperclip);
-            	backHolder[g].add(attach);
+				backHolder.add(paperclip);
+            	backHolder.add(attach);
 			}
 			seperatorPhone[g] = Ti.UI.createView({
 				backgroundColor: "#808080",
@@ -927,8 +877,8 @@ if (Titanium.Platform.osname == "iphone"){
             
 			fbRow.add(commentHolder[g]);
             fbRow.add(seperatorPhone[g]);
-            backHolder[g].add(tmpView);
-            fbRow.add(backHolder[g]);
+            backHolder.add(tmpView);
+            fbRow.add(backHolder);
             tableView.appendRow(fbRow);
             g++;
 

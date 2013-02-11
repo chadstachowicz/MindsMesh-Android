@@ -1,12 +1,21 @@
 Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
-win.layout = 'vertical';
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 win.backButtonTitle = 'Classes'
-var menuButton = Ti.UI.createButton({
-    title:'Menu',
-    toggle:false // Custom property for menu toggle
-});
-//win.setLeftNavButton(menuButton);
 
 menuButton.addEventListener('click', function(e){
     Titanium.App.fireEvent('nav-menu-button',{data:e.source.toggle});
@@ -17,14 +26,22 @@ Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
 });
 Titanium.App.addEventListener('main-win-close', function(e)
 {
-	win.navGroup.close(win);
+	win.close();
 });
 var btnCreate = Titanium.UI.createButton({
 	title:'Import',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	left: 10
 });
-win.setRightNavButton(btnCreate);
+bar.add(btnCreate);
 var tableview = Titanium.UI.createTableView({
 	backgroundColor:'#ecfaff',
+	top: 44,
 });
 win.add(tableview);
 var user = ''; 

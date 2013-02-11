@@ -4,7 +4,7 @@ win.layout = 'vertical';
 
 Titanium.App.addEventListener('main-win-close', function(e)
 {
-	win.navGroup.close(win);
+	win.close();
 });
 var label1 = Titanium.UI.createLabel({
 	text: 'Once you have verified the link which arrives in your email.  Please click the Confirmed button below.',
@@ -39,7 +39,6 @@ var confirm = Titanium.UI.createButton({
     								title:'Moodle Account',
    									url:'moodle_account.js',
     								barColor: '#46a546',
-    								navGroup: win.navGroup,
    	    							backgroundColor:"#e2e7ed",
        								moving:false, // Custom property for movement
        								axis:0 // Custom property for X axis
@@ -48,13 +47,12 @@ var confirm = Titanium.UI.createButton({
 								var win1 = Titanium.UI.createWindow({  
    									url:'feed.js',
     								barColor: '#46a546',
-    								navGroup: win.navGroup,
    	    							backgroundColor:"#46a546",
        								moving:false, // Custom property for movement
        								axis:0 // Custom property for X axis
     			 				});
 							}
-							win.navGroup.open(win1,{animated:false});
+							win1.open();
 						} else {
 							alert('You have not confirmed the email we have sent you.  If you would like to resend it to yourself please click the Re-enter Email button.')
 						}
@@ -81,7 +79,7 @@ var confirm = Titanium.UI.createButton({
 					});
 					remail.addEventListener('click', function(e)
 					{
-						win.navGroup.close(win);	
+						win.close();	
 					});
 					remail.addEventListener('touchstart', function(){
 						this.setBackgroundColor('blue');

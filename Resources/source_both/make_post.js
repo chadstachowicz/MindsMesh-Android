@@ -1,19 +1,40 @@
 Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
 win.layout = 'absolute';
-
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 var btnPost = Titanium.UI.createButton({
 	title:'Finish',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	right: 10
 });
 var selectedId = 0;
-win.setRightNavButton(btnPost);
+bar.add(btnPost);
 
 
 if (Titanium.Platform.osname == 'iphone')
 {
 var ta1 = Titanium.UI.createTextArea({
 	editable: true,
-	top:0,
+	top:44,
 	left:55,
 	height: 155,
 	width: (Titanium.Platform.displayCaps.platformWidth - 55),
@@ -28,7 +49,7 @@ var ta1 = Titanium.UI.createTextArea({
 });
 var pict = Titanium.UI.createImageView({
 				image: Titanium.App.Properties.getString('photo_url'),
-				top: 0,
+				top: 44,
 				left: 0,
 				height:50,
 				width:50,
@@ -36,7 +57,7 @@ var pict = Titanium.UI.createImageView({
 } else {
 	var ta1 = Titanium.UI.createTextArea({
 	editable: true,
-	top:0,
+	top:44,
 	left:80,
 	height: 155,
 	width: (Titanium.Platform.displayCaps.platformWidth - 75),
@@ -52,7 +73,7 @@ var pict = Titanium.UI.createImageView({
 });
 var pict = Titanium.UI.createImageView({
 				image: Titanium.App.Properties.getString('photo_url'),
-				top: 0,
+				top: 44,
 				left: 0,
 				height:75,
 				width:75,
@@ -160,7 +181,7 @@ btnPost.addEventListener('click', function(e){
 			} else {
 				Titanium.App.fireEvent('event_one',{data:'posted'});
 			}
-			win.navGroup.close(win);
+			win.close();
 
 		};
 		xhr.send(JSON.stringify(postData));

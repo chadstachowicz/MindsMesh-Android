@@ -1,6 +1,20 @@
 Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
-
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Titanium.Platform.displayCaps.platformWidth,
+				height: 44,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width: Titanium.Platform.displayCaps.platformWidth
+			});
+			bar.add(border);
+win.add(bar);
 var winModal = Ti.UI.createWindow({
         backgroundColor : '#B0000000',
         visible: false
@@ -35,13 +49,14 @@ var winModal = Ti.UI.createWindow({
     			url:'post.js',
     			backgroundColor:'#ecfaff',
     			barColor: '#46a546',
-    			notModal: winModal
+    			notModal: winModal,
+    			modal: true
 			});
 			win1.postid = e.source.id;
 			win1.fullname = Titanium.App.Properties.getString("name");
 			win1.photo_url = Titanium.App.Properties.getString("photo_url");
 			winModal.hide();
-			win.navGroup.open(win1,{animated:false});
+			win1.open();
 			} else if (e.source.type == "Topic"){
 				Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:7, class_id: e.source.id});
 			}
@@ -95,7 +110,9 @@ var winModal = Ti.UI.createWindow({
    		 winModal.add(view);
 var tableView = Titanium.UI.createTableView({
 	backgroundColor:'#46a546',
-	separatorStyle: 'none'
+	separatorColor: 'transparent',
+	top: 44,
+	left:0
 });
 
 win.add(tableView);
@@ -103,7 +120,7 @@ win.add(tableView);
 Titanium.App.addEventListener('main-win-close', function(e)
 {
 	winModal.close();
-	win.navGroup.close(win);
+	win.close();
 });
 
 
@@ -143,7 +160,7 @@ xhr.onload = function(){
     		width:25,
 		});
 	}
-	win.setTitleControl(notificationButton);
+	bar.add(notificationButton);
 	win.title = "Feed";
 		for (var i = 0; i < user.unread.length; ++i) {
 			var classNumber = Titanium.UI.createLabel({
@@ -262,6 +279,13 @@ var brainlabel = [];
 var replybrainlabel = [];
 var btnPost = Titanium.UI.createButton({
 	title:'Answer',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	right: 10
 });
 
 btnPost.addEventListener('click', function(e){
@@ -269,15 +293,16 @@ btnPost.addEventListener('click', function(e){
     	title:'Answer',
    	 	url:'make_reply.js',
    	 	backgroundColor:'#ecfaff',
-   	 	navGroup: win.navGroup,
    	 	barColor: '#46a546',
-   	 	layout:'absolute'
+   	 	layout:'absolute',
+   	 	right:10,
+   	 	modal: true
 	});
 	win1.postid = win.postid;
-	win.navGroup.open(win1,{animated:false});
+	win1.open();
 });
 
-win.setRightNavButton(btnPost);
+bar.add(btnPost);
 
 var updating = false;
 
@@ -502,7 +527,7 @@ xhr.onload = function(){
 					var webview = Titanium.UI.createWebView({url:e.source.url});
 					win1.add(webview);
 					winModalFiles.close();
-					win.navGroup.open(win1,{animated:false});
+					win1.open();
 		
 			});
 
@@ -758,7 +783,7 @@ xhr.onload = function(){
 					var webview = Titanium.UI.createWebView({url:e.source.url});
 					win1.add(webview);
 					winModalFiles.close();
-					win.navGroup.open(win1,{animated:false});
+					win1.open();
 		
 			});
 
@@ -907,7 +932,7 @@ xhr.onload = function(){
 	alert("Network problems.");
 }
 	// when you're done, just reset
-	tableView.setContentInsets({top:0},{animated:true});
+//	tableView.setContentInsets({top:0},{animated:true});
 	reloading = false;
 	lastUpdatedLabel.text = "Last Updated: "+formatDate();
 	statusLabel.text = "Pull down to refresh...";
@@ -947,7 +972,7 @@ tableView.addEventListener('dragEnd', function()
 		arrow.hide();
 		actInd.show();
 		statusLabel.text = "Reloading...";
-		tableView.setContentInsets({top:60},{animated:true});
+	//	tableView.setContentInsets({top:60},{animated:true});
 		tableView.scrollToTop(-60,true);
 		arrow.transform=Ti.UI.create2DMatrix();
 		beginReloading();
