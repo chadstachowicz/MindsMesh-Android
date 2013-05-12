@@ -1,5 +1,5 @@
 Ti.include("model/api.js");
-
+var row_data = []
 var win = Titanium.UI.currentWindow;
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
@@ -118,42 +118,31 @@ var grades_button =  Titanium.UI.createButton({
 	borderRadius: 2,
 	right: 10
 });
-var refresh_button =  Titanium.UI.createButton({
-	title:'Refresh',
-	height: 30,
-    width:'auto',
-	backgroundColor:'#347235',
-	borderWidth: 1,
-	borderColor: 'black',
-	borderRadius: 2,
-	left: 10
-});
 var regex = /course\/view\.php\?id=(\d+)/;
 gradesid = regex.exec(win.Moodurl);
 
 bar.add(grades_button);
 
 grades_button.addEventListener('click', function(e){
-	var win1 = Titanium.UI.createWindow({  
-    					url: 'grade_view.js',
-   	 					backgroundColor:'#ecfaff',
-   	 					barColor: '#46a546'
-						});
    var postData = {username: Titanium.App.Properties.getString('moodle-user'), password: Titanium.App.Properties.getString('moodle-pass')};	
   	xhr = postLoginToMoodle(Titanium.App.Properties.getString("moodle_url"),postData);
   	xhr.autoRedirect = false;
   	xhr.clearCookies('uncc.edu');
 	xhr.onload = function(){
 	}
+	var passed = false;
 	xhr.onreadystatechange = function () {
 		var regex = /MoodleSession/;
 		found = regex.exec(xhr.getResponseHeader("Set-Cookie"));
-		if (found != null){
-					win1.url = 'http://moodle.uncc.edu/grade/report/index.php?id=' + gradesid[1];
+		if (found != null && passed == false){
+			passed = true;
+				var win1 = Titanium.UI.createWindow({  
+    					url: 'grade_view.js',
+   	 					backgroundColor:'#ecfaff',
+						});
+					win1.grade_url = 'http://moodle.uncc.edu/grade/report/index.php?id=' + gradesid[1];
 					win1.cookie = xhr.getResponseHeader("Set-Cookie");
 					win1.open();
-
-					
 				}
 	}
 	xhr.send(postData);
@@ -365,10 +354,10 @@ xhr.onload = function(){
 				height:40
             });
         }
-        c++;
         fbRow.add(leftImage);
         fbRow.add(labelTitle);
-        tableview.appendRow(fbRow);
+        row_data[c] = fbRow;
+        c++;
 	}
 	var regex = /(http.+quiz\/view\.php\?id=\d+).+<img src="(https.+gif)".+<span>(.+)<span/ig;
 	var c = 0;
@@ -409,11 +398,12 @@ xhr.onload = function(){
 				height:40
             });
         }
-        c++;
         fbRow.add(leftImage);
         fbRow.add(labelTitle);
-        tableview.appendRow(fbRow);
+        row_data[c] = fbRow;
+        c++;
 	}
+	tableview.setData(row_data);
 }
 xhr.send();
 } else {
@@ -430,18 +420,35 @@ tableview.addEventListener('click', function(e)
    	 					modal:true
 						});
 						
-					var regex = /(https:\/\/)(.+)/
-					var hits = regex.exec(e.source.FileUrl);
-					url2 = hits[1] + Titanium.App.Properties.getString("moodle-user") + ':' + Titanium.App.Properties.getString("moodle-pass") + '@' + hits[2];
+					url2 = e.source.FileUrl;
 					var xhr = Titanium.Network.createHTTPClient({enableKeepAlive:false, timeout:6000});
 					xhr.retries = 0;
 					xhr.open('GET',url2);
 					xhr.onload = function(){
 						try{
+							filename = "filename.pdf";
+							  if (this.responseData.type == 1)
+							  {
+   								 var f = Ti.Filesystem.getFile(
+              					 this.responseData.nativePath);
+    							var dest = Ti.Filesystem.getFile(
+                 				 Ti.Filesystem.getExternalStorageDirectory(),
+                 					 filename);
+  						  if (dest.exists)
+      						dest.deleteFile();
+    						f.move(dest.nativePath);
+  							}
+  							else
+  						{
+   								 var f = Ti.Filesystem.getFile(
+               						Ti.Filesystem.getExternalStorageDirectory(),
+             						  filename);
+   								 f.write(this.responseData);
+  						}
 							var intent = Ti.Android.createIntent({
 							action: Ti.Android.ACTION_VIEW,
 							type: "application/pdf",
-							data: this.responseData
+							data: f.getNativePath()
 							});	
 							Ti.Android.currentActivity.startActivity(intent);
 						} catch (err) {

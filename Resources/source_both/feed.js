@@ -1,4 +1,5 @@
 Ti.include("model/api.js");
+var row_data = [];
 var offset = 0;
 var win = Titanium.UI.currentWindow;
 var bar = Ti.UI.createView({
@@ -16,6 +17,11 @@ var bar = Ti.UI.createView({
 			});
 			bar.add(border);
 win.add(bar);
+
+
+
+
+
 var winModal = Ti.UI.createWindow({
         backgroundColor : '#B0000000',
         visible: false
@@ -178,7 +184,6 @@ xhr.onload = function(){
     		top: 0,
     		left: 15
     	});
-    			alert("ewrwerwer");
     	notificationButton.add(label);
 	} else {
 		var notificationButton = Ti.UI.createButton({
@@ -273,6 +278,7 @@ xhr.onload = function(){
 		var fbRow = Titanium.UI.createTableViewRow({
                 backgroundColor:'#e2e7ed',
                 box:true,
+        		
                 notification_id: user.read[i].id,
                 id:user.read[i].target_id,
                 type: user.read[i].target_type,
@@ -471,7 +477,7 @@ function beginReloading()
 
 function endReloading()
 {
-	var rd = []; tableView.data = rd;
+	row_data = []; tableView.data = row_data;
 	lastRow = 0;
 	lastRowId = 1;
     xhr = getPostsWithFamily(Titanium.App.Properties.getString('mmat'));
@@ -498,6 +504,7 @@ win.addEventListener('focus', function()
   if ( Titanium.Network.online) {
   	if (win.passedData == 'posted'){
   		reloading = true;
+  		row_data = [];
   		tableView.setData([]);
     	beginReloading();
    } else {
@@ -879,7 +886,7 @@ if (Titanium.Platform.osname == "iphone"){
             fbRow.add(seperatorPhone[g]);
             backHolder.add(tmpView);
             fbRow.add(backHolder);
-            tableView.appendRow(fbRow);
+            row_data[g] = fbRow;
             g++;
 
 
@@ -890,6 +897,7 @@ if (Titanium.Platform.osname == "iphone"){
         }
         updating = false;
         reloading = false;
+        tableView.setData(row_data);
    };
    Ti.Gesture.addEventListener('orientationchange',function(e){
         win.width = Titanium.Platform.displayCaps.platformWidth;

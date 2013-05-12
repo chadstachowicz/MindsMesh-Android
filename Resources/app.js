@@ -5,8 +5,10 @@ var win = Titanium.UI.createWindow({
     className:'win',
     barColor: '#46a546'
 });
-Titanium.Facebook.appid = "391884850858794";
-Titanium.Facebook.permissions = ['email'];
+ var fb = require('facebook');
+ fb.appid = "391884850858794";
+ fb.permissions = ['email'];
+ fb.authorize();
 
 //// ---- Menu window, positioned on the left
 var menuWindow = Ti.UI.createWindow({
@@ -458,7 +460,7 @@ Titanium.App.addEventListener('nav-menu-button', function(e)
   			});
    			dlg.addEventListener('click', function(ev) {
    				 if (ev.index == 0) { 
-   				 	Titanium.Facebook.logout();
+   				 	fb.logout();
 				reopenLogin();
 				menuWindow.close();
 				Titanium.App.fireEvent('main-win-close');
@@ -536,10 +538,10 @@ win.close();
 }
 
 var user = '';
-Titanium.Facebook.addEventListener('login', function(e) {
+fb.addEventListener('login', function(e) {
 	    
 		Titanium.App.Properties.setString("fbid",e.data["id"]);	
-		xhr = postLogin(Titanium.Facebook.accessToken)
+		xhr = postLogin(fb.accessToken)
 		xhr.onload = function(){
 			var response = this.responseText;
 			var user = JSON.parse(response);
@@ -579,21 +581,21 @@ var pict = Titanium.UI.createImageView({
 }
 win.add(pict);
 if(Titanium.Platform.osname == 'iphone'){
-	win.add(Titanium.Facebook.createLoginButton({
-		style:Ti.Facebook.BUTTON_STYLE_WIDE,
+	win.add(fb.createLoginButton({
+		style:fb.BUTTON_STYLE_WIDE,
 		bottom:30,
 		width:'auto'
 	}));
 }
 else{
-	win.add(Titanium.Facebook.createLoginButton({
-		style:Ti.Facebook.BUTTON_STYLE_WIDE,
+	win.add(fb.createLoginButton({
+		style:fb.BUTTON_STYLE_WIDE,
 		height:40,
 		width: 'auto',
 		bottom:50
 	}));
 }
-if(Titanium.Facebook.loggedIn == true)
+if(fb.loggedIn == true)
 {
 	redirectAfterLogin();
 } else {

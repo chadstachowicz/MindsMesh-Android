@@ -1,6 +1,5 @@
 var win = Titanium.UI.currentWindow;
-alert("TEST");
-var bar = Ti.UI.createView({
+;var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
 				width:Titanium.Platform.displayCaps.platformWidth,
 				height: 44,
@@ -16,15 +15,26 @@ var bar = Ti.UI.createView({
 			bar.add(border);
 win.add(bar);
 var webview = Titanium.UI.createWebView({top: 44});
+var refresh_button =  Titanium.UI.createButton({
+	title:'Refresh',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	left: 10
+});
 bar.add(refresh_button);
 refresh_button.addEventListener('click', function(e){
 	webview.reload();
 })
-webview.addEventListener('load', function(e) {
-	    alert(win1.cookie);
-	    webview.evalJS("document.cookie='"+win1.cookie+"';");
-		var cookies = webview.evalJS("document.cookie");
-		alert(cookies);
+var passed = false;
+webview.addEventListener('beforeload', function(e) {
+	if (passed == false){
+	    webview.evalJS("document.cookie='"+win.cookie+"';");
+	    passed = true;
+	   }
 });
 win.add(webview);
-webview.url = win.url;
+webview.url = win.grade_url;
