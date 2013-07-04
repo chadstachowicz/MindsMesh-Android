@@ -8,7 +8,6 @@ var win = Titanium.UI.createWindow({
  var fb = require('facebook');
  fb.appid = "391884850858794";
  fb.permissions = ['email'];
- fb.authorize();
 
 //// ---- Menu window, positioned on the left
 var menuWindow = Ti.UI.createWindow({
@@ -17,6 +16,16 @@ var menuWindow = Ti.UI.createWindow({
     left:0,
     width:Titanium.Platform.displayCaps.platformWidth
 });
+		var shareWhoModal2 = Ti.UI.createWindow(
+		{
+    		backgroundColor : '#B0000000',
+    		zIndex: 1
+		});
+				var shareWhoModal3 = Ti.UI.createWindow(
+		{
+    		backgroundColor : '#B0000000',
+    		zIndex: 1
+		});
 //// ---- Menu Table
 // Menu Titles
 	
@@ -29,8 +38,252 @@ var menuTableView = Ti.UI.createTableView({
     left:0
 });
 
+menuTableView.addEventListener('click', function(e)
+{
+	if (e.source.id == 1){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:1});
+   } else if (e.source.id == 4){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:4});
+   } else if (e.source.id == 5){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:5});
+   } else if (e.source.id == 6){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:6});
+   } else if (e.source.id == 7){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:7, topic_id: e.source.extraData, entity_id: e.source.entity_id});
+   } else if (e.source.id == 2){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:2, group_id: e.source.extraData});
+   } else if (e.source.id == 8){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:8});
+   } else if (e.source.id == 9){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:9});
+   } else if (e.source.id == 10){
+     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:10});
+   }
+});
+
+var navWindow = Ti.UI.createWindow({
+	//height:Titanium.Platform.displayCaps.platformHeight,
+    width: Ti.Platform.displayCaps.platformWidth, // Set the width of the sliding window to avoid cut out from animation
+	backgroundColor:"#e2e7ed"
+});
+
+Titanium.App.addEventListener('reloadMenu', function(e)
+{   
+	reloadMenu();
+});
+Titanium.App.addEventListener('loadFeed', function(e)
+{   
+	reloadMenu();
+	var win2 = Titanium.UI.createWindow({  
+   					url:'source_both/feed.js',
+    				barColor: '#46a546',
+    				width: Ti.Platform.displayCaps.platformWidth,
+   	    			backgroundColor:"#46a546",
+       				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+    			 });
+    			Titanium.App.fireEvent('main-win-close');
+        		win2.open();
+        		navWindow = win2;
+				
+});
+Titanium.App.addEventListener('loadMoodleAccount', function(e)
+{   
+	reloadMenu();
+		var win2 = Titanium.UI.createWindow({  
+    				title:'Moodle Account',
+   					url:'source_both/moodle_account.js',
+    				barColor: '#46a546',
+    				width: Ti.Platform.displayCaps.platformWidth,
+   	    			backgroundColor:"#e2e7ed",
+       				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+    			 });
+    			Titanium.App.fireEvent('main-win-close');
+        		win2.open();
+        		navWindow = win2;
+				
+});
+Titanium.App.addEventListener('loadTopic', function(e)
+{   
+	var win7 = Titanium.UI.createWindow({  
+   	    		backgroundColor:'#46a546',
+    			url:'source_both/feed.js',
+    			barColor: '#46a546',
+    			width: Ti.Platform.displayCaps.platformWidth,
+    			moving:false, // Custom property for movement
+       			axis:0 // Custom property for X axis
+	});
+	Titanium.App.fireEvent('main-win-close');
+				win7.class_id = class_id;
+				win7.moodle = moodle;
+				win7.class_number = class_number;
+				win7.open();
+				navWindow = win7;
+				
+});
+Titanium.App.addEventListener('nav-menu-button', function(e)
+{
+        // If the menu is opened
+    var menu_id = e.menu_id;
+    var topic_id = e.topic_id;
+    var entity_id = e.entity_id;
+    var group_id = e.group_id;
+    var group_name = groupName[group_id];
+    var moodle = menuMoodle[topic_id];
+    var entity_id = menuEntity[entity_id];
+    var class_number = menuName[topic_id];
+    if(e.data == true){
+        var navAnimate = Ti.UI.createAnimation({
+            left:0,
+            duration:75,
+            curve:Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
+        });
+        navAnimate.addEventListener('complete', function(e){
+        	 if(menu_id == 1)
+        	 {
+        	 	var win2 = Titanium.UI.createWindow({  
+   					url:'source_both/feed.js',
+    				barColor: '#46a546',
+    				width: Ti.Platform.displayCaps.platformWidth,
+   	    			backgroundColor:"#46a546",
+       				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+    			 });
+    			 Titanium.App.fireEvent('main-win-close');
+				win2.open();
+				navWindow = win2;
+			} else if(menu_id == 4) {
+        	 	var win4 = Titanium.UI.createWindow({  
+    				title:'Verify Email',
+   					url:'source_both/join_school.js',
+    				barColor: '#46a546',
+   	    			backgroundColor:'#ecfaff',
+       				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+    			 });
+				Titanium.App.fireEvent('main-win-close');
+				win4.open();
+				navWindow = win4;
+			} else if(menu_id == 5) {
+        	 	var win5 = Titanium.UI.createWindow({  
+    				title:'Moodle',
+   					url:'source_both/moodle_account.js',
+   					width: Ti.Platform.displayCaps.platformWidth,
+    				barColor: '#46a546',
+   	    			backgroundColor:"#e2e7ed",
+       				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+    			 });
+				Titanium.App.fireEvent('main-win-close');
+				win5.open();
+				navWindow = win5;
+			} else if(menu_id == 6) {
+ 			 dlg.show();
+			} else if(menu_id == 7) {
+				var win7 = Titanium.UI.createWindow({  
+   	    		backgroundColor:'#46a546',
+    			url:'source_both/feed.js',
+    			barColor: '#46a546',
+    			width: Ti.Platform.displayCaps.platformWidth,
+    			moving:false, // Custom property for movement
+       			axis:0 // Custom property for X axis
+				});
+				Titanium.App.fireEvent('main-win-close');
+				win7.topic_id = topic_id;
+				win7.moodle = moodle;
+				win7.entity_id = entity_id;
+				win7.class_number = class_number;
+				win7.open();
+				navWindow = win7;
+			} else if(menu_id == 2) {
+				var win7 = Titanium.UI.createWindow({  
+   	    		backgroundColor:'#46a546',
+    			url:'source_both/feed.js',
+    			barColor: '#46a546',
+    			width: Ti.Platform.displayCaps.platformWidth,
+    			moving:false, // Custom property for movement
+       			axis:0 // Custom property for X axis
+				});
+				Titanium.App.fireEvent('main-win-close');
+				win7.group_id = group_id;
+				win7.group_name = group_name;
+				win7.open();
+				navWindow = win7;	
+			} else if(menu_id == 8) {
+				var win8 = Titanium.UI.createWindow({  
+    				title:'Search Classes',
+   	 				url:'source_both/search_topics.js',
+   	 				backgroundColor:'#ecfaff',
+   	 				width: Ti.Platform.displayCaps.platformWidth,
+   	 				layout:'absolute',
+   	 				barColor: '#46a546',
+   	 				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+				});
+				Titanium.App.fireEvent('main-win-close');
+				win8.open();
+				navWindow = win8;
+			} else if(menu_id == 9) {
+				var win1 = Titanium.UI.createWindow({
+   	 					url:'source_both/campus_map.js',
+   	 					backgroundColor:'#ecfaff',
+   	 					layout:'absolute',
+   	 					barColor: '#46a546'
+				});
+				Titanium.App.fireEvent('main-win-close');
+				win1.open();
+				navWindow = win1;
+			} else if(menu_id == 10) {
+        	 	var win9 = Titanium.UI.createWindow({  
+    				title:'Moodle Account',
+   					url:'source_both/moodle_account.js',
+    				barColor: '#46a546',
+    				width: Ti.Platform.displayCaps.platformWidth,
+   	    			backgroundColor:"#e2e7ed",
+       				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+    			 });
+    			Titanium.App.fireEvent('main-win-close');
+				win9.open();
+				navWindow = win9;
+			}
+        });
+        navWindow.animate(navAnimate);
+        Titanium.App.fireEvent('nav-menu-button-toggle',{toggle:false});
+    }
+    // If the menu isn't opened
+    else{
+        navWindow.animate({
+            left:260,
+            duration:75,
+            curve:Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
+        });
+       Titanium.App.fireEvent('nav-menu-button-toggle',{toggle:true});
+    }
+});
+
+var dlg = Titanium.UI.createAlertDialog({
+    			message:'Are you sure you want to logout', 
+    			buttonNames: ['Logout','Cancel']
+  			});
+   			dlg.addEventListener('click', function(ev) {
+   				 if (ev.index == 0) { 
+   				 	Titanium.App.Properties.setString("logged_in", 'false');
+   				 	fb.logout();
+				reopenLogin();
+				menuWindow.close();
+				Titanium.App.fireEvent('main-win-close');
+				navWindow.close();
+   				 } else if (ev.index == 1) { // clicked "No"
+					dlg.hide();
+   				 }
+ 			 });
+
 var menuMoodle = [];
+var menuEntity = [];
 var menuName = [];
+var groupName = [];
 
 function reopenLogin()	{
 	win.open();
@@ -118,6 +371,30 @@ var labelTitle = Titanium.UI.createLabel({
 			});
 fbRow8.add(labelIcon);
 fbRow8.add(labelTitle);
+var fbRow11 = Titanium.UI.createTableViewRow({
+                backgroundColor:'#252525',
+                id: 11,
+				height:40
+            });
+var labelTitle = Titanium.UI.createLabel({
+    			text:'Add Group....',
+    			id: 11,
+    			font:{fontSize:16},
+    			color:'#e2e7ed',
+   				width:'auto',
+    			textAlign:'left',
+    			left: 45
+			});
+			var labelIcon = Titanium.UI.createImageView({
+				image: 'images/emblem_library.png',
+				id: 11,
+				left: 4,
+				top: 4,
+				height:32,
+				width:32,
+			});
+fbRow11.add(labelIcon);
+fbRow11.add(labelTitle);
 var fbRow9 = Titanium.UI.createTableViewRow({
                 backgroundColor:'#252525',
                 id: 9,
@@ -166,7 +443,7 @@ var labelIcon = Titanium.UI.createImageView({
 			});
 fbRow10.add(labelIcon);
 fbRow10.add(labelTitle);
-if(Titanium.App.Properties.getString("moodle_entity_id") == 2){
+if(Titanium.App.Properties.getString("moodle_entity_2") == 2){
 menuTitles = [fbRow1, fbRow9] } else{
 	menuTitles = [fbRow1];
 }
@@ -177,6 +454,7 @@ menuTitles = [fbRow1, fbRow9] } else{
 				height:40,
 				moodle: false,
 				number: user.topic_users[c].topic.number,
+				entity_id: user.topic_users[c].topic.entity_id,
 				extraData: user.topic_users[c].topic.id
             });
             
@@ -190,6 +468,7 @@ menuTitles = [fbRow1, fbRow9] } else{
     			textAlign:'left',
     			left: 45,
     			moodle: false,
+    			entity_id: user.topic_users[c].topic.entity_id,
     			number:user.topic_users[c].topic.number,
                 extraData: user.topic_users[c].topic.id
 			});
@@ -201,24 +480,66 @@ menuTitles = [fbRow1, fbRow9] } else{
 				height:32,
 				width:32,
 				moodle: false,
+				entity_id: user.topic_users[c].topic.entity_id,
     			number:user.topic_users[c].topic.number,
                 extraData: user.topic_users[c].topic.id
 			});
 			fbRow.add(labelIcon);
 			fbRow.add(labelTitle);
 			menuName[user.topic_users[c].topic.id] = user.topic_users[c].topic.number;
-			if (user.topic_users[c].topic.entity_id == Titanium.App.Properties.getString("moodle_entity_id")){
+			moodle_entity_string = "moodle_entity_" + user.topic_users[c].topic.entity_id;
+			moodle_url_string = "moodle_url_" + user.topic_users[c].topic.entity_id;
+			if (user.topic_users[c].topic.entity_id == Titanium.App.Properties.getString(moodle_entity_string)){
 				fbRow.moodle = true;
 				labelTitle.moodle = true;
 				labelIcon.moodle = true;
-				menuMoodle[user.topic_users[c].topic.id] = true;
+				menuMoodle[user.topic_users[c].topic.id] = Titanium.App.Properties.getString(moodle_url_string);
+				menuEntity[user.topic_users[c].topic.entity_id] = user.topic_users[c].topic.entity_id;
 			}
 			fbRow.add(labelTitle);
             menuTitles.push(fbRow);
         }
-        menuTitles.push(fbRow8);
+      //  menuTitles.push(fbRow8);
+        for(c=0;c<user.group_users.length;c++){
+            var fbRow = Titanium.UI.createTableViewRow({
+                backgroundColor:'#252525',
+                id: 2,
+				height:40,
+				moodle: false,
+				extraData: user.group_users[c].group.id
+            });
+            if (c==0){fbRow.header = 'Groups'}
+			var labelTitle = Titanium.UI.createLabel({
+    			text:user.group_users[c].group.name,
+    			name:user.group_users[c].group.name,
+    			font:{fontSize:16},
+    			id: 2,
+    			color:'#e2e7ed',
+   				width:'auto',
+    			textAlign:'left',
+    			left: 45,
+    			moodle: false,
+                extraData: user.group_users[c].group.id
+			});
+			var labelIcon = Titanium.UI.createImageView({
+				image: 'images/emblem_library.png',
+				id: 2,
+				left: 4,
+				top: 4,
+				height:32,
+				width:32,
+				moodle: false,
+				name: user.group_users[c].group.name,
+                extraData: user.group_users[c].group.id
+			});
+			fbRow.add(labelIcon);
+			groupName[user.group_users[c].group.id] = user.group_users[c].group.name;
+			fbRow.add(labelTitle);
+            menuTitles.push(fbRow);
+        }
+    //    menuTitles.push(fbRow11);
         menuTitles.push(fbRow6);
-   if(Titanium.App.Properties.getString("moodle_entity_id") != null)
+   if(Titanium.App.Properties.getString("moodle_entity_2") != null)
    {
 		menuTitles.push(fbRow10);
 		}
@@ -226,6 +547,369 @@ menuTitles = [fbRow1, fbRow9] } else{
 	}
 	xhr.send();
 }
+
+var user = '';
+fb.addEventListener('login', function(e) {
+	    if (e.data != null ){
+		Titanium.App.Properties.setString("fbid",e.data["id"]);	
+		}
+		xhr = postLogin(fb.accessToken)
+		xhr.onload = function(){
+			var response = this.responseText;
+			var user = JSON.parse(response);
+			for (i=0;i<user.entity_users.length;i++){
+				if (user.entity_users[i].entity.moodle_url != null)
+				{
+					moodle_entity_string = "moodle_entity_" + user.entity_users[i].entity.id;
+					moodle_url_string = "moodle_url_" + user.entity_users[i].entity.id;
+					entity_user_string = "entity_user_" + user.entity_users[i].id;
+					Titanium.App.Properties.setString(moodle_entity_string,user.entity_users[i].entity.id);
+					Titanium.App.Properties.setString(moodle_url_string,user.entity_users[i].entity.moodle_url);
+					Titanium.App.Properties.setString(entity_user_string,user.entity_users[i].id);
+				}	
+			}
+			Titanium.App.Properties.setString("logged_in", 'true');
+			Titanium.App.Properties.setString("name",user.name);
+			Titanium.App.Properties.setString("num_entities",user.entity_users.length);
+			Titanium.App.Properties.setString("num_topics",user.topic_users.length);
+			Titanium.App.Properties.setString("userid",user.id);
+			Titanium.App.Properties.setString("mmat", user.access_token);
+			Titanium.App.Properties.setString("photo_url", user.photo_url);
+			redirectAfterLogin();
+			
+		};
+		xhr.send();
+		
+});
+if (Titanium.Platform.osname == 'iphone')
+{
+var pict = Titanium.UI.createImageView({
+				image: 'images/Mindsmesh_logo_highres.png',
+				top: 50,
+				height:200,
+				width:300,
+			});
+} else {
+	var pict = Titanium.UI.createImageView({
+				image: 'images/Mindsmesh_logo_highres.png',
+				top: 50,
+				bottom: 50
+			});
+}
+win.add(pict);
+
+
+	var loginButton = Ti.UI.createButton(
+	{
+    	title: 'Login',
+   		toggle:false,
+    	width:200,
+		bottom: 30
+	});
+	loginButton.addEventListener('click',function(e){
+		var win_height = 380;
+   		var win_width = Ti.Platform.displayCaps.platformWidth * .85;
+ 		var headerLabel = Ti.UI.createLabel({
+		text:"Please login below",
+		font:{fontSize:16,fontWeight:'bold'},
+		textAlign:'center',
+		box: true,
+		top: 15
+	});
+	var seperatorPhone = Ti.UI.createView({
+					backgroundColor: "#808080",
+					width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 10,
+					top: 7,
+					box: true,
+					height:2,
+				});
+	var email = Titanium.UI.createTextField({
+   	 	font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'35dp',
+    	hintText: 'Email',
+    	width:250,
+    	top: 10,
+    	bottom: 10,
+    	box:true,
+    	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	});
+	var password = Titanium.UI.createTextField({
+   	 	font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'35dp',
+    	hintText: 'Password',
+    	passwordMask:true,
+    	width:250,
+    	bottom: 20,
+    	box:true,
+    	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	});
+	var signinButton = Ti.UI.createButton(
+	{
+    	title: 'Sign In',
+   		toggle:false,
+    	font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'35dp',
+    	box:true,
+    	width:200,
+
+	});
+	signinButton.addEventListener('click',function(e){
+	
+	    var postData = {'email': email.value, 'password': password.value};
+		xhr = postLogin("",postData)
+		xhr.onload = function(){
+			var response = this.responseText;
+			var user = JSON.parse(response);
+			for (i=0;i<user.entity_users.length;i++){
+				if (user.entity_users[i].entity.moodle_url != null)
+				{
+					moodle_entity_string = "moodle_entity_" + user.entity_users[i].entity.id;
+					moodle_url_string = "moodle_url_" + user.entity_users[i].entity.id;
+					entity_user_string = "entity_user_" + user.entity_users[i].id;
+					Titanium.App.Properties.setString(moodle_entity_string,user.entity_users[i].entity.id);
+					Titanium.App.Properties.setString(moodle_url_string,user.entity_users[i].entity.moodle_url);
+					Titanium.App.Properties.setString(entity_user_string,user.entity_users[i].id);
+				}	
+			}
+			Titanium.App.Properties.setString("logged_in", 'true');
+			Titanium.App.Properties.setString("name",user.name);
+			Titanium.App.Properties.setString("num_entities",user.entity_users.length);
+			Titanium.App.Properties.setString("num_topics",user.topic_users.length);
+			Titanium.App.Properties.setString("userid",user.id);
+			Titanium.App.Properties.setString("mmat", user.access_token);
+			Titanium.App.Properties.setString("photo_url", user.photo_url);
+			email.blur();
+			password.blur();
+			redirectAfterLogin();
+			
+		};
+		xhr.onerror = function(e){
+			alert('Login failed, please check credentials and try again.');
+		}
+		xhr.send(JSON.stringify(postData));
+			})
+				var orLabel2 = Ti.UI.createLabel({
+				text:"or",
+				font:{fontSize:16,fontWeight:'bold'},
+				box: true,
+				top: 30
+			}); 
+ 		var view = Ti.UI.createView(
+    	{
+        	backgroundColor : '#e2e7ed',
+        	borderColor : '#A5A5A5',
+        	box: true,
+        	borderRadius : 15,
+        	top: 50,
+        	layout: 'vertical',
+        	borderWidth : 2,
+        	width : win_width,
+        	height : win_height
+   		 });
+   		 view.add(headerLabel);
+   		 view.add(seperatorPhone);
+   		 view.add(email);
+   		 view.add(password);
+   		 view.add(signinButton);
+   		 view.add(orLabel2);
+   		 view.add(fb.createLoginButton({
+		style:fb.BUTTON_STYLE_WIDE,
+		top: 30
+	}));
+   		 shareWhoModal2.add(view);
+		 shareWhoModal2.addEventListener('click', function(e)
+		 {
+			if(e.source.box != true)
+			{
+   				shareWhoModal2.close();
+ 			}
+		 });
+		 shareWhoModal2.open();
+	})
+		
+	var signupButton = Ti.UI.createButton(
+	{
+    	title: 'Sign Up',
+   		toggle:false,
+    	width:200,
+		bottom: 90
+	});
+	signupButton.addEventListener('click',function(e){
+		var win_height = 480;
+   		var win_width = Ti.Platform.displayCaps.platformWidth * .85;
+   		var namesa = Titanium.UI.createTextField({
+   		font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'35dp',
+    	hintText: 'First and Last Name',
+    	width:250,
+    	box: true,
+    	top: 10,
+    	bottom: 10,
+    	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	});
+   	var emailsa = Titanium.UI.createTextField({
+   	 	font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'35dp',
+    	hintText: 'School Email',
+    	width:250,
+    	box: true,
+    	bottom: 10,
+    	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	});
+	var passwordsa = Titanium.UI.createTextField({
+   	 	font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'35dp',
+    	hintText: 'Password',
+    	box: true,
+    	passwordMask:true,
+    	width:250,
+    	bottom: 10,
+    	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	});
+	var passwordconfsa = Titanium.UI.createTextField({
+   	 	font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'35dp',
+    	hintText: 'Confirm Password',
+    	box: true,
+    	passwordMask:true,
+    	width:250,
+    	bottom: 20,
+    	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED
+	});
+	var finishsignupButton = Ti.UI.createButton(
+	{
+    	title: 'Finish Sign Up',
+   		toggle:false,
+    	font:{fontSize:18,fontWeight:'bold'},
+   	 	height:'37dp',
+    	box: true,
+    	width:200,
+
+	});
+	finishsignupButton.addEventListener('click', function(e){
+		var reg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.edu$/; 
+		if(reg.test(emailsa.value) == false) {
+		   alert("This is not a valid educational email.");
+		} else if (passwordsa.value != passwordconfsa.value) {
+		   alert("Passwords don't match.");
+		}  else if (namesa.value.length < 4) {
+		   alert("Please enter your first and last name.");
+		} else {
+			var postData = {'name': namesa.value, 'email': emailsa.value, 'password': passwordsa.value, 'password_confirmation': passwordconfsa.value};
+			xhr = postCreateUser(postData)
+			xhr.onload = function(e){
+				    var response = this.responseText;
+					var user = JSON.parse(response);
+					alert(user);
+					for (i=0;i<user.entity_users.length;i++){
+						if (user.entity_users[i].entity.moodle_url != null)
+						{
+							moodle_entity_string = "moodle_entity_" + user.entity_users[i].entity.id;
+							moodle_url_string = "moodle_url_" + user.entity_users[i].entity.id;
+							entity_user_string = "entity_user_" + user.entity_users[i].id;
+							Titanium.App.Properties.setString(moodle_entity_string,user.entity_users[i].entity.id);
+							Titanium.App.Properties.setString(moodle_url_string,user.entity_users[i].entity.moodle_url);
+							Titanium.App.Properties.setString(entity_user_string,user.entity_users[i].id);
+						}	
+					}
+					Titanium.App.Properties.setString("logged_in", 'true');
+					Titanium.App.Properties.setString("name",user.name);
+					Titanium.App.Properties.setString("num_entities",user.entity_users.length);
+					Titanium.App.Properties.setString("num_topics",user.topic_users.length);
+					Titanium.App.Properties.setString("userid",user.id);
+					Titanium.App.Properties.setString("mmat", user.access_token);
+					Titanium.App.Properties.setString("photo_url", user.photo_url);
+					
+				    var win4 = Titanium.UI.createWindow({  
+   						url:'source_both/finish_verification.js',
+    					barColor: '#46a546',
+   	    				backgroundColor:'#ecfaff',
+    			 	});
+					shareWhoModal3.close();
+					win4.open();
+					navWindow = win4;
+			}
+			xhr.onerror = function(e){
+				var response = this.responseText;
+				jres = JSON.parse(response);
+				alert(jres.error.message);
+			}
+			namesa.blur();
+    		emailsa.blur();
+    		passwordsa.blur();
+    		passwordconfsa.blur();
+			xhr.send(JSON.stringify(postData));
+
+
+		}
+	})
+	var headerLabel = Ti.UI.createLabel({
+		text:"Provide the information below to finish signup",
+		font:{fontSize:16,fontWeight:'bold'},
+		box: true,
+		textAlign:'center',
+		color: '#00000',
+		top: 15
+	});
+	var seperatorPhone = Ti.UI.createView({
+					backgroundColor: "#808080",
+					width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 10,
+					top: 7,
+					box: true,
+					height:2,
+				});
+		var orLabel2 = Ti.UI.createLabel({
+				text:"or",
+				color: "#000000",
+				box: true,
+				font:{fontSize:16,fontWeight:'bold'},
+				top: 10
+			});
+ 		var view = Ti.UI.createView(
+    	{
+        	backgroundColor : '#e2e7ed',
+        	borderColor : '#A5A5A5',
+        	box: true,
+        	borderRadius : 15,
+        	top: 50,
+        	layout: 'vertical',
+        	borderWidth : 2,
+        	width : win_width,
+        	height : win_height
+   		 });
+   		 view.add(headerLabel);
+   		 view.add(seperatorPhone);
+   		 view.add(namesa);
+   		 view.add(emailsa);
+   		 view.add(passwordsa);
+   		 view.add(passwordconfsa);
+   		 view.add(finishsignupButton);
+   		 view.add(orLabel2);
+   		 view.add(fb.createLoginButton({
+		style:fb.BUTTON_STYLE_WIDE,
+		top: 10
+	}));
+   		 shareWhoModal3.add(view);
+		 shareWhoModal3.addEventListener('click', function(e)
+		 {
+			if(e.source.box != true)
+			{
+   				shareWhoModal3.close();
+ 			}
+		 });
+		 shareWhoModal3.open();
+	})
+	win.add(loginButton);
+	win.add(signupButton);
+
+if(Titanium.App.Properties.getString("logged_in") == 'true')
+{
+	redirectAfterLogin();
+} else {
+	win.open();
+}
+
+
 function redirectAfterLogin() {
 	
 	if(Titanium.Platform.osname == 'iphone' || Titanium.Platform.osname == 'ipad'){
@@ -240,7 +924,10 @@ function redirectAfterLogin() {
         Ti.API.info("Push notification device token is: "+deviceToken);
         Ti.API.info("Push notification types: "+Titanium.Network.remoteNotificationTypes);
         Ti.API.info("Push notification enabled: "+Titanium.Network.remoteNotificationsEnabled);
- 
+ 		var env = 'development';
+ 		if(Ti.App.Properties.getString('production')=='true'){
+ 			env = 'production'
+ 		}
         var request = Titanium.Network.createHTTPClient();
         request.onload = function()
         {
@@ -284,22 +971,15 @@ function redirectAfterLogin() {
 		});
 }
 	reloadMenu();
+	shareWhoModal2.close();
+	shareWhoModal3.close();
 //// ---- Window with navigationGroup
-var navWindow = Ti.UI.createWindow({
-	//height:Titanium.Platform.displayCaps.platformHeight,
-    width:Titanium.Platform.displayCaps.platformWidth, // Set the width of the sliding window to avoid cut out from animation
-	backgroundColor:"#e2e7ed"
-});
-
-
-Ti.Gesture.addEventListener('orientationchange',function(e){
-        navWindow.width = Titanium.Platform.displayCaps.platformWidth;
-    });
 
 
 var win1 = Titanium.UI.createWindow({  
     url:'source_both/feed.js',
     barColor: '#46a546',
+    width:Ti.Platform.displayCaps.platformWidth,
     backgroundColor:"#e2e7ed",
     moving:false, // Custom property for movement
     axis:0 // Custom property for X axis
@@ -308,7 +988,7 @@ var win1 = Titanium.UI.createWindow({
     				title:'Confirm School Email',
    					url:'source_both/join_school.js',
     				barColor: '#46a546',
-   	    			backgroundColor:"#e2e7ed",
+   	    			backgroundColor:'#ecfaff',
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
     			 });
@@ -324,281 +1004,16 @@ if (Titanium.App.Properties.getString("num_entities") == 0){
 
 navWindow = win4;
 
-} else if (Titanium.App.Properties.getString("num_entities") > 0 && Titanium.App.Properties.getString("moodle_entity_id") != false && Titanium.App.Properties.getString("num_topics") == 0){
+//} else if (Titanium.App.Properties.getString("num_entities") > 0 && Titanium.App.Properties.getString("moodle_entity_id") != false && Titanium.App.Properties.getString("num_topics") == 0){
 	
-navWindow = win9;
+//navWindow = win9;
 
 } else {
 navWindow = win1;
 }
 
 navWindow.open();
-menuTableView.addEventListener('click', function(e)
-{
-	if (e.source.id == 1){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:1});
-   } else if (e.source.id == 2){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:2});
-   } else if (e.source.id == 4){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:4});
-   } else if (e.source.id == 5){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:5});
-   } else if (e.source.id == 6){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:6});
-   } else if (e.source.id == 7){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:7, class_id: e.source.extraData});
-   } else if (e.source.id == 8){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:8});
-   } else if (e.source.id == 9){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:9});
-   } else if (e.source.id == 10){
-     Titanium.App.fireEvent('nav-menu-button',{data:true, menu_id:10});
-   }
-});
-Titanium.App.addEventListener('reloadMenu', function(e)
-{   
-	reloadMenu();
-});
-Titanium.App.addEventListener('loadFeed', function(e)
-{   
-	reloadMenu();
-	var win2 = Titanium.UI.createWindow({  
-   					url:'source_both/feed.js',
-    				barColor: '#46a546',
-   	    			backgroundColor:"#46a546",
-       				moving:false, // Custom property for movement
-       				axis:0 // Custom property for X axis
-    			 });
-    			Titanium.App.fireEvent('main-win-close');
-        		win2.open();
-        		navWindow = win2;
-				
-});
-Titanium.App.addEventListener('loadTopic', function(e)
-{   
-	var win7 = Titanium.UI.createWindow({  
-   	    		backgroundColor:'#46a546',
-    			url:'source_both/topic_feed.js',
-    			barColor: '#46a546',
-    			moving:false, // Custom property for movement
-       			axis:0 // Custom property for X axis
-	});
-	Titanium.App.fireEvent('main-win-close');
-				win7.class_id = class_id;
-				win7.moodle = moodle;
-				win7.class_number = class_number;
-				win7.open();
-				navWindow = win7;
-				
-});
-Titanium.App.addEventListener('touch-slide', function(e)
-{   
-	
-	
-	    navWindow.animate({
-            left:e.cords,
-            duration:20
-        });
-        // Defining coordinates as the final left position
-        navWindow.left = e.cords;
-});
-Titanium.App.addEventListener('nav-menu-button', function(e)
-{
-        // If the menu is opened
-    var menu_id = e.menu_id;
-    var class_id = e.class_id;
-    var moodle = menuMoodle[class_id];
-    var class_number = menuName[class_id];
-    if(e.data == true){
-        var navAnimate = Ti.UI.createAnimation({
-            left:0,
-            duration:75,
-            curve:Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
-        });
-        navAnimate.addEventListener('complete', function(e){
-        	 if(menu_id == 1)
-        	 {
-        	 	var win2 = Titanium.UI.createWindow({  
-   					url:'source_both/feed.js',
-    				barColor: '#46a546',
-   	    			backgroundColor:"#46a546",
-       				moving:false, // Custom property for movement
-       				axis:0 // Custom property for X axis
-    			 });
-				Titanium.App.fireEvent('main-win-close');
-				win2.open();
-				navWindow = win2;
-			} else if(menu_id == 4) {
-        	 	var win4 = Titanium.UI.createWindow({  
-    				title:'Verify Email',
-   					url:'source_both/join_school.js',
-    				barColor: '#46a546',
-   	    			backgroundColor:"#e2e7ed",
-       				moving:false, // Custom property for movement
-       				axis:0 // Custom property for X axis
-    			 });
-				Titanium.App.fireEvent('main-win-close');
-				win4.open();
-				navWindow = win4;
-			} else if(menu_id == 5) {
-        	 	var win5 = Titanium.UI.createWindow({  
-    				title:'Moodle',
-   					url:'source_both/moodle_account.js',
-    				barColor: '#46a546',
-   	    			backgroundColor:"#e2e7ed",
-       				moving:false, // Custom property for movement
-       				axis:0 // Custom property for X axis
-    			 });
-				Titanium.App.fireEvent('main-win-close');
-				win5.open();
-				navWindow = win5;
-			} else if(menu_id == 6) {
-				
-				var dlg = Titanium.UI.createAlertDialog({
-    			message:'Are you sure you want to logout', 
-    			buttonNames: ['Logout','Cancel']
-  			});
-   			dlg.addEventListener('click', function(ev) {
-   				 if (ev.index == 0) { 
-   				 	fb.logout();
-				reopenLogin();
-				menuWindow.close();
-				Titanium.App.fireEvent('main-win-close');
-				navWindow.close();
-   				 } else if (ev.index == 1) { // clicked "No"
-					dlg.hide();
-   				 }
- 			 });
- 			 dlg.show();
-			} else if(menu_id == 7) {
-				var win7 = Titanium.UI.createWindow({  
-   	    		backgroundColor:'#46a546',
-    			url:'source_both/topic_feed.js',
-    			barColor: '#46a546',
-    			moving:false, // Custom property for movement
-       			axis:0 // Custom property for X axis
-				});
-				Titanium.App.fireEvent('main-win-close');
-				win7.class_id = class_id;
-				win7.moodle = moodle;
-				win7.class_number = class_number;
-				win7.open();
-				navWindow = win7;
-			} else if(menu_id == 8) {
-				var win8 = Titanium.UI.createWindow({  
-    				title:'Search Classes',
-   	 				url:'source_both/search_topics.js',
-   	 				backgroundColor:'#ecfaff',
-   	 				layout:'absolute',
-   	 				barColor: '#46a546',
-   	 				moving:false, // Custom property for movement
-       				axis:0 // Custom property for X axis
-				});
-				Titanium.App.fireEvent('main-win-close');
-				win8.open();
-				navWindow = win8;
-			} else if(menu_id == 9) {
-				var win1 = Titanium.UI.createWindow({
-   	 					url:'source_both/campus_map.js',
-   	 					backgroundColor:'#ecfaff',
-   	 					layout:'absolute',
-   	 					barColor: '#46a546'
-				});
-				Titanium.App.fireEvent('main-win-close');
-				win1.open();
-				navWindow = win1;
-			} else if(menu_id == 10) {
-        	 	var win9 = Titanium.UI.createWindow({  
-    				title:'Moodle Account',
-   					url:'source_both/moodle_account.js',
-    				barColor: '#46a546',
-   	    			backgroundColor:"#e2e7ed",
-       				moving:false, // Custom property for movement
-       				axis:0 // Custom property for X axis
-    			 });
-				Titanium.App.fireEvent('main-win-close');
-				win9.open();
-				navWindow = win9;
-			}
-        });
-        navWindow.animate(navAnimate);
-        Titanium.App.fireEvent('nav-menu-button-toggle',{toggle:false});
-    }
-    // If the menu isn't opened
-    else{
-        navWindow.animate({
-            left:260,
-            duration:75,
-            curve:Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
-        });
-       Titanium.App.fireEvent('nav-menu-button-toggle',{toggle:true});
-    }
-});
 win.close();
 }
 
-var user = '';
-fb.addEventListener('login', function(e) {
-	    
-		Titanium.App.Properties.setString("fbid",e.data["id"]);	
-		xhr = postLogin(fb.accessToken)
-		xhr.onload = function(){
-			var response = this.responseText;
-			var user = JSON.parse(response);
-			for (i=0;i<user.entity_users.length;i++){
-				if (user.entity_users[i].entity.moodle_url != null)
-				{
-					Titanium.App.Properties.setString("moodle_entity_id",user.entity_users[i].entity.id);
-					Titanium.App.Properties.setString("moodle_url",user.entity_users[i].entity.moodle_url);
-					Titanium.App.Properties.setString("entity_user_id",user.entity_users[i].id);
-				}	
-			}
-			Titanium.App.Properties.setString("name",user.name);
-			Titanium.App.Properties.setString("num_entities",user.entity_users.length);
-			Titanium.App.Properties.setString("num_topics",user.topic_users.length);
-			Titanium.App.Properties.setString("userid",user.id);
-			Titanium.App.Properties.setString("mmat", user.access_token);
-			Titanium.App.Properties.setString("photo_url", user.photo_url);
-			redirectAfterLogin();
-			
-		};
-		xhr.send();
-});
-if (Titanium.Platform.osname == 'iphone')
-{
-var pict = Titanium.UI.createImageView({
-				image: 'images/Mindsmesh_logo_highres.png',
-				top: 50,
-				height:200,
-				width:300,
-			});
-} else {
-	var pict = Titanium.UI.createImageView({
-				image: 'images/Mindsmesh_logo_highres.png',
-				top: 50,
-				bottom: 50
-			});
-}
-win.add(pict);
-if(Titanium.Platform.osname == 'iphone'){
-	win.add(fb.createLoginButton({
-		style:fb.BUTTON_STYLE_WIDE,
-		bottom:30,
-		width:'auto'
-	}));
-}
-else{
-	win.add(fb.createLoginButton({
-		style:fb.BUTTON_STYLE_WIDE,
-		height:40,
-		width: 'auto',
-		bottom:50
-	}));
-}
-if(fb.loggedIn == true)
-{
-	redirectAfterLogin();
-} else {
-	win.open();
-}
 

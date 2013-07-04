@@ -3,7 +3,7 @@ var win = Titanium.UI.currentWindow;
 win.layout = 'vertical';
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
-				width:Titanium.Platform.displayCaps.platformWidth,
+				width:Ti.UI.Size,
 				height: 44,
 				left: 0,
 				top:0,
@@ -12,13 +12,13 @@ var bar = Ti.UI.createView({
 				backgroundColor:"black",
 				height:1,
 				bottom:0,
-				width: Titanium.Platform.displayCaps.platformWidth
+				width:Ti.UI.Size
 			});
 			bar.add(border);
 win.add(bar);
 var htmlFile = '../html/map.html';
 var wv = Ti.UI.createWebView({
-    url: htmlFile,
+    url: htmlFile
 });
  var search = Titanium.UI.createSearchBar({
 	barColor:"#808080",
@@ -119,8 +119,8 @@ var winModal = Ti.UI.createWindow({
 		 view.add(seperatorPhone);
 		 view.add(modalTableView);
    		 winModal.add(view);
-var menuButton = Ti.UI.createButton({
-    image:'../images/Paragraph-Justify.png',
+var menuButton = Ti.UI.createImageView({
+    image:'/images/Paragraph-Justify.png',
     toggle:false,
     height: 30,
     width:30,
@@ -150,8 +150,11 @@ Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
 });
 Titanium.App.addEventListener('main-win-close', function(e)
 {
+	setTimeout(function(e){
 	winModal.close();
+	win.remove(wv);
 	win.close();
+	},500);
 });
 
 

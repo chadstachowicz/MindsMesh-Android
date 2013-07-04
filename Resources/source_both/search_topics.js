@@ -2,9 +2,8 @@ Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
-				width:Titanium.Platform.displayCaps.platformWidth,
+				width:Ti.UI.Size,
 				height: 44,
-				zIndex: 1,
 				left:0,
 				top:0,
 			});
@@ -12,15 +11,23 @@ var bar = Ti.UI.createView({
 				backgroundColor:"black",
 				height:1,
 				bottom:0,
-				width: Titanium.Platform.displayCaps.platformWidth
+				width: Ti.UI.Size
 			});
 			bar.add(border);
 win.add(bar);
-var menuButton = Ti.UI.createButton({
-    image:'../images/Paragraph-Justify.png',
-    toggle:false // Custom property for menu toggle
+var menuButton = Ti.UI.createImageView({
+    image:'/images/Paragraph-Justify.png',
+    toggle:false,
+    height: 30,
+    width:30,
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	left: 10
+
 });
-win.setLeftNavButton(menuButton);
+bar.add(menuButton);
 
 menuButton.addEventListener('click', function(e){
     Titanium.App.fireEvent('nav-menu-button',{data:e.source.toggle});
@@ -51,8 +58,10 @@ add_button.addEventListener('click', function(e){
 var search = Titanium.UI.createSearchBar({
 	barColor:"#808080",
 	showCancel:true,
-	height:43,
-	top:0
+	font:{fontSize:16,fontWeight:'bold'},
+   	height:'33dp',
+	top:1,
+	left: 50,
 });
 
 win.add(search);
@@ -104,6 +113,7 @@ search.addEventListener('return', function(e)
                 backgroundColor:'#ecfaff',
                 title: topics[c].name,
                 extraData:topics[c].id,
+                color: '#000000',
 				hasDetail:true
             });
             

@@ -2,7 +2,7 @@ Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
-				width:Titanium.Platform.displayCaps.platformWidth,
+				width:Ti.UI.Size,
 				height: 44,
 				left:0,
 				top:0,
@@ -11,7 +11,7 @@ var bar = Ti.UI.createView({
 				backgroundColor:"black",
 				height:1,
 				bottom:0,
-				width: Titanium.Platform.displayCaps.platformWidth
+				width:Ti.UI.Size,
 			});
 			bar.add(border);
 win.add(bar);

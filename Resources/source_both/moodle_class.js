@@ -1,9 +1,10 @@
 Ti.include("model/api.js");
 var row_data = []
 var win = Titanium.UI.currentWindow;
+
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
-				width:Titanium.Platform.displayCaps.platformWidth,
+				width:Ti.UI.Size,
 				height: 44,
 				left:0,
 				top:0,
@@ -12,10 +13,11 @@ var bar = Ti.UI.createView({
 				backgroundColor:"black",
 				height:1,
 				bottom:0,
-				width: Titanium.Platform.displayCaps.platformWidth
+				width:Ti.UI.Size
 			});
 			bar.add(border);
 win.add(bar);
+	
 var winModal = Ti.UI.createWindow({
         backgroundColor : '#B0000000',
         visible: false
@@ -121,13 +123,11 @@ var grades_button =  Titanium.UI.createButton({
 var regex = /course\/view\.php\?id=(\d+)/;
 gradesid = regex.exec(win.Moodurl);
 
-bar.add(grades_button);
+//bar.add(grades_button);
 
 grades_button.addEventListener('click', function(e){
    var postData = {username: Titanium.App.Properties.getString('moodle-user'), password: Titanium.App.Properties.getString('moodle-pass')};	
   	xhr = postLoginToMoodle(Titanium.App.Properties.getString("moodle_url"),postData);
-  	xhr.autoRedirect = false;
-  	xhr.clearCookies('uncc.edu');
 	xhr.onload = function(){
 	}
 	var passed = false;
@@ -147,13 +147,42 @@ grades_button.addEventListener('click', function(e){
 	}
 	xhr.send(postData);
 });
-var tableview = Titanium.UI.createTableView({
+ var plainTemplate = {
+    childTemplates: [
+        {
+            type: 'Ti.UI.Label', // Use a label
+            bindId: 'fileName',  // Bind ID for this label
+            properties: {        // Sets the Label.left property
+                left: 52,
+                top: 10,
+                textAlign:'left',
+                backgroundColor:'#ecfaff',
+				height:'auto',
+                color:'#000000',
+				font:{fontWeight:'bold',fontSize:18}
+            },
+            events: { click : launchFile } 
+        },
+        {
+            type: 'Ti.UI.ImageView', // Use a label
+            bindId: 'fileIcon',  // Bind ID for this label
+            properties: {        // Sets the Label.left property
+				left: 10,
+				height: 32,
+				width: 32,
+            },
+            events: { click : launchFile }  
+        }
+    ]
+};
+var listView = Titanium.UI.createListView({
 	backgroundColor:'#ecfaff',
-	editable: 'true',
-	deleteButtonTitle: 'Leave class',
+	templates: { 'plain': plainTemplate},
+	defaultItemTemplate: 'plain',
 	top:44
 });
-win.add(tableview);
+var section = Ti.UI.createListSection();
+win.add(listView);
 
 
 
@@ -193,8 +222,9 @@ xhr.onload = function(){
     		width:25,
 		});
 	}
-	win.setTitleControl(notificationButton);
-	win.title = "Feed";
+//	win.setTitleControl(notificationButton);
+	bar.add(notificationButton);
+//	win.title = "Feed";
 		for (var i = 0; i < user.unread.length; ++i) {
 			var classNumber = Titanium.UI.createLabel({
     			text:user.unread[i].actors_count + ' people ' + user.unread[i].action + ' to',
@@ -311,10 +341,86 @@ xhr.send()
 
 var user = ''; 
 function beginReloading(){
-tableview.setData([]);
+row_data = [];
 if ( Titanium.Network.online) {
-xhr = getDataFromMoodle(win.Moodurl);
-xhr.onload = function(){
+if (win.class_id != null){
+		xhr = getMoodle2CourseContents(Titanium.App.Properties.getString("moodle_url_" + win.entity_id),Titanium.App.Properties.getString("moodle-token-" + win.entity_id),win.class_id);
+		xhr.onload = function()
+		{
+			var response = this.responseText;
+			var course = JSON.parse(response);
+			for (var i = 0; i < course.length; i++)
+			{
+				if (course[i].modules.length > 0)
+				{	
+					Ti.API.info(course[i]);
+					for (var j = 0; j < course[i].modules.length; j++)
+					{
+						if (course[i].modules[j].modname == "resource")
+						{
+							var fileurl = course[i].modules[j].contents[0].fileurl + '&token=' + Titanium.App.Properties.getString("moodle-token-" + win.entity_id);
+							var filename = course[i].modules[j].contents[0].filename;
+							var leftImage = Titanium.UI.createImageView({
+								image: course[i].modules[j].modicon,
+								hiddenTitle: course[i].modules[j].name,
+                				FileUrl: fileurl,
+                				FileName: filename,
+								height: 'auto',
+								left: 2
+							});
+							var labelTitle = Titanium.UI.createLabel({
+    							text:course[i].modules[j].name,
+    							hiddenTitle: course[i].modules[j].name,
+                				FileUrl: fileurl,
+                				FileName: filename,
+    							font:{fontSize:16,fontWeight:'bold'},
+    							color:'#000',
+   								width:'auto',
+    							textAlign:'left',
+    							left: 20
+							});
+							if (j == 0){
+								var fbRow = Titanium.UI.createTableViewRow({
+ 	         					header:course[i].name,
+               					 backgroundColor:'#ecfaff',
+                				hiddenTitle: course[i].modules[j].name,
+                				FileUrl: fileurl,
+                				FileName: filename,
+								hasDetail:true,
+								height:40
+            				});
+						} else {
+            				var fbRow = Titanium.UI.createTableViewRow({
+                				backgroundColor:'#ecfaff',
+                				hiddenTitle: course[i].modules[j].name,
+               	 				FileUrl: fileurl,
+               	 				FileName: filename,
+								hasDetail:true,
+								height:40
+            				});
+        				}
+        				fbRow.add(leftImage);
+        				fbRow.add(labelTitle);
+        				row_data.push({
+            	
+            			fileName : {text: course[i].modules[j].name, FileUrl: fileurl, FileName: filename},
+            			fileIcon : {image: course[i].modules[j].modicon, FileUrl: fileurl, FileName: filename},
+            			properties : {
+            				itemId: 'row',
+            				accessoryType: Ti.UI.LIST_ACCESSORY_TYPE_NONE
+           				}
+            		});
+						}
+					}
+				}
+			}
+			section.setItems(row_data);
+	   		listView.sections = [section];
+		}
+		xhr.send();
+	} else {	
+	xhr = getDataFromMoodle(win.Moodurl);
+	xhr.onload = function(){
 	var response = this.responseText;
 	var regex = /href=.+(http.+mod\/resource\/view\.php\?id=\d+).+<img src="(https.+gif)".+<span>(.+)<span/ig;
 	var c = 0
@@ -354,10 +460,10 @@ xhr.onload = function(){
 				height:40
             });
         }
+        c++;
         fbRow.add(leftImage);
         fbRow.add(labelTitle);
-        row_data[c] = fbRow;
-        c++;
+        tableview.appendRow(fbRow);
 	}
 	var regex = /(http.+quiz\/view\.php\?id=\d+).+<img src="(https.+gif)".+<span>(.+)<span/ig;
 	var c = 0;
@@ -398,35 +504,46 @@ xhr.onload = function(){
 				height:40
             });
         }
+        c++;
         fbRow.add(leftImage);
         fbRow.add(labelTitle);
-        row_data[c] = fbRow;
-        c++;
+        tableview.appendRow(fbRow);
 	}
-	tableview.setData(row_data);
 }
 xhr.send();
+}
 } else {
 	alert("Network problems.");
 }
 };
-tableview.addEventListener('click', function(e)
-{
-	var win1 = Titanium.UI.createWindow({  
-    					title:e.source.hiddenTitle,
-   	 					backgroundColor:'#ecfaff',
-   	 					layout:'absolute',
-   	 					barColor: '#46a546',
-   	 					modal:true
-						});
-						
-					url2 = e.source.FileUrl;
+function launchFile(e){
+	var loadView = Ti.UI.createWindow({
+    	backgroundColor: 'black',
+    	opacity: .90,
+    	height: Ti.Platform.displayCaps.platformHeight,
+    	width: Ti.Platform.displayCaps.platformWidth
+	});
+ 
+	var loadIndicator = Ti.UI.createActivityIndicator({
+    	style: Ti.UI.iPhone.ActivityIndicatorStyle.BIG,
+    	message: 'Downloading File...',
+    	font : 'Arial',
+    	color: '#FFF'
+	});
+	loadView.add(loadIndicator);
+	loadView.open();
+	loadIndicator.show();
+   	var url = e.section.getItemAt(e.itemIndex).fileName.FileUrl;
+   	var name = e.section.getItemAt(e.itemIndex).fileName.FileName;		
+					url2 = url;
 					var xhr = Titanium.Network.createHTTPClient({enableKeepAlive:false, timeout:6000});
 					xhr.retries = 0;
 					xhr.open('GET',url2);
 					xhr.onload = function(){
+						loadView.close();
 						try{
-							filename = "filename.pdf";
+							filename = name;
+							var ending = filename.split(".");
 							  if (this.responseData.type == 1)
 							  {
    								 var f = Ti.Filesystem.getFile(
@@ -436,7 +553,7 @@ tableview.addEventListener('click', function(e)
                  					 filename);
   						  if (dest.exists)
       						dest.deleteFile();
-    						f.move(dest.nativePath);
+    						f.copy(dest.nativePath);
   							}
   							else
   						{
@@ -444,35 +561,24 @@ tableview.addEventListener('click', function(e)
                						Ti.Filesystem.getExternalStorageDirectory(),
              						  filename);
    								 f.write(this.responseData);
+   								 
   						}
+  							var mimeType = this.responseData.mimeType;
 							var intent = Ti.Android.createIntent({
 							action: Ti.Android.ACTION_VIEW,
-							type: "application/pdf",
+							type: mimeType,
 							data: f.getNativePath()
 							});	
 							Ti.Android.currentActivity.startActivity(intent);
 						} catch (err) {
-							var alertDialog = Titanium.UI.createAlertDialog({
-                			title: 'No PDF Viewer',
-               				 message: 'We tried to open a PDF but failed. Do you want to search the marketplace for a PDF viewer?',
-                			buttonNames: ['Yes','No'],
-                			cancel: 1
-            			});
-            			alertDialog.show();
-            			alertDialog.addEventListener('click', function(evt) {
-                			if (evt.index == 0) {
-                    			Ti.Platform.openURL('http://search?q=pdf');
-                			}
-            			});
-            								}
+							
+							alert("We we unable to open " + filename + " automatically.  You can find the file on your storage device under com.mindsmesh.mobile.")
+
+                							}
 						}
 xhr.send();
-				
-					
-			//		win1.add(webview);
-				//	win1.open();
 		
-});
+}
 win.addEventListener('focus', function() 
 {
   if ( Titanium.Network.networkType != Titanium.Network.NETWORK_NONE ) {

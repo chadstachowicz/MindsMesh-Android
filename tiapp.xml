@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ti:app xmlns:ti="http://ti.appcelerator.org">
     <property name="ti.android.runtime">v8</property>
+    <property name="production" type="string">true</property>
+    <property name="ti.facebook.appid">391884850858794</property>
     <deployment-targets>
         <target device="tizen">false</target>
         <target device="mobileweb">false</target>
@@ -9,7 +11,7 @@
         <target device="android">true</target>
         <target device="blackberry">false</target>
     </deployment-targets>
-    <sdk-version>3.1.0.GA</sdk-version>
+    <sdk-version>3.1.1.GA</sdk-version>
     <id>com.mindsmesh.mobile</id>
     <name>MindsMesh</name>
     <version>1.0</version>
@@ -40,10 +42,11 @@
     <android xmlns:android="http://schemas.android.com/apk/res/android">
         <manifest>
             <uses-permission android:name="android.permission.INTERNET"/>
+            <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
         </manifest>
     </android>
     <modules>
-    <module platform="android">facebook</module>
-    <module platform="iphone">facebook</module>
+        <module platform="android">facebook</module>
+        <module platform="iphone">facebook</module>
     </modules>
 </ti:app>

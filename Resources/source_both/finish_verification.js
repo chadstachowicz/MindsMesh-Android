@@ -12,6 +12,7 @@ var label1 = Titanium.UI.createLabel({
 	height:'auto',
 	left: 17,
 	width: 320,
+	color: '#000000'
 	
 });
 
@@ -35,24 +36,10 @@ var confirm = Titanium.UI.createButton({
 						if(user.entity_users.length > 0)
 						{
 							if(Titanium.App.Properties.getString("moodle_entity_id") != false && Titanium.App.Properties.hasProperty('moodle-user') == false){
-								var win1 = Titanium.UI.createWindow({  
-    								title:'Moodle Account',
-   									url:'moodle_account.js',
-    								barColor: '#46a546',
-   	    							backgroundColor:"#e2e7ed",
-       								moving:false, // Custom property for movement
-       								axis:0 // Custom property for X axis
-    			 				});
+								Titanium.App.fireEvent('loadMoodleAccount');
 							} else {
-								var win1 = Titanium.UI.createWindow({  
-   									url:'feed.js',
-    								barColor: '#46a546',
-   	    							backgroundColor:"#46a546",
-       								moving:false, // Custom property for movement
-       								axis:0 // Custom property for X axis
-    			 				});
+								Titanium.App.fireEvent('loadFeed');
 							}
-							win1.open();
 						} else {
 							alert('You have not confirmed the email we have sent you.  If you would like to resend it to yourself please click the Re-enter Email button.')
 						}
@@ -69,7 +56,7 @@ var confirm = Titanium.UI.createButton({
 					
 					var remail = Titanium.UI.createButton({
             		title: 'Re-enter Email',
-            		top: 17,
+            		top: 60,
             		width: 230,
 					height: 30,
 					backgroundColor: '#46a546',
@@ -79,7 +66,16 @@ var confirm = Titanium.UI.createButton({
 					});
 					remail.addEventListener('click', function(e)
 					{
-						win.close();	
+						win.close();
+							var win4 = Titanium.UI.createWindow({  
+    				title:'Confirm School Email',
+   					url:'source_both/join_school.js',
+    				barColor: '#46a546',
+   	    			backgroundColor:'#ecfaff',
+       				moving:false, // Custom property for movement
+       				axis:0 // Custom property for X axis
+    			 });
+    			 win4.open();
 					});
 					remail.addEventListener('touchstart', function(){
 						this.setBackgroundColor('blue');

@@ -1,16 +1,35 @@
 Ti.include("model/api.js");
 var win = Titanium.UI.currentWindow;
-win.barColor = '#46a546';
-
+var bar = Ti.UI.createView({
+				backgroundColor:'#46a546',
+				width:Ti.UI.Size,
+				height: 44,
+				left:0,
+				top:0,
+			});
+			var border = Ti.UI.createView({
+				backgroundColor:"black",
+				height:1,
+				bottom:0,
+				width:Ti.UI.Size
+			});
+			bar.add(border);
+win.add(bar);
 var btnPost = Titanium.UI.createButton({
 	title:'Finish',
+	height: 30,
+    width:'auto',
+	backgroundColor:'#347235',
+	borderWidth: 1,
+	borderColor: 'black',
+	borderRadius: 2,
+	right: 10
 });
-win.setRightNavButton(btnPost);
+bar.add(btnPost);
 var menuButton = Ti.UI.createButton({
     title:'Menu',
     toggle:false // Custom property for menu toggle
 });
-//win.setLeftNavButton(menuButton);
 
 menuButton.addEventListener('click', function(e){
     Titanium.App.fireEvent('nav-menu-button',{data:e.source.toggle});
@@ -41,6 +60,7 @@ btnPost.addEventListener('click', function(e){
    	    					backgroundColor:"#e2e7ed"
     			 		});
 				win1.open();
+				win.close();
 
 			};
 			xhr.send(JSON.stringify(postData));	
@@ -49,37 +69,45 @@ btnPost.addEventListener('click', function(e){
 });
 if (Titanium.Platform.osname == 'iphone')
 {
-	var ta1 = Titanium.UI.createTextField({
+var ta1 = Titanium.UI.createTextArea({
 	editable: true,
-	hintText:"Enter your school email to confirm.",
-	top:0,
-	left:55,
-	height: 40,
+	top:44,
+	left:80,
+	height: 155,
 	width: (Titanium.Platform.displayCaps.platformWidth - 55),
-	textAlign:'left'
-	});
+	backgroundColor:'#ecfaff',
+	color:'#888',
+	textAlign:'left',
+	appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
+	suppressReturn:false
+	
+});
 	
 var pict = Titanium.UI.createImageView({
 				image: Titanium.App.Properties.getString('photo_url'),
-				top: 0,
+				top: 44,
 				left: 0,
 				height:50,
 				width:50,
 			});
 } else {
-	var ta1 = Titanium.UI.createTextField({
+	var ta1 = Titanium.UI.createTextArea({
 	editable: true,
-	hintText:"Enter your school email to confirm.",
-	top:0,
+	top:44,
 	left:80,
-	height: 40,
+	height: 155,
 	width: (Titanium.Platform.displayCaps.platformWidth - 75),
+	backgroundColor:'#ecfaff',
+	color:'#888',
 	textAlign:'left',
-	font:{fontSize:16}
-	});
+	appearance:Titanium.UI.KEYBOARD_APPEARANCE_ALERT,	
+    font:{fontSize:16},
+	suppressReturn:false
+	
+});
 var pict = Titanium.UI.createImageView({
 				image: Titanium.App.Properties.getString('photo_url'),
-				top: 0,
+				top: 44,
 				left: 0,
 				height:75,
 				width:75,
