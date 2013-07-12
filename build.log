@@ -3,13 +3,12 @@ Logfile initialized
 [DEBUG] /Users/cstachowicz/Library/Application Support/Titanium/mobilesdk/osx/3.1.1.GA/android/builder.py install MindsMesh /Users/cstachowicz/Downloads/adt-bundle-mac-x86_64/sdk /Users/cstachowicz/Documents/Titanium_Studio_Workspace/MindsMesh-Android com.mindsmesh.mobile 2
 [INFO] Titanium SDK version: 3.1.1 (06/15/13 16:09 f7592c1)
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 2 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.012106 seconds on emulator to get ready
+[DEBUG] waited 0.013537 seconds on emulator to get ready
 [DEBUG] com.mindsmesh.mobile installed? False
 [INFO] Copying CommonJS modules...
 [INFO] Copying project resources..
-[TRACE] COPYING MODIFIED FILE: /Users/cstachowicz/Documents/Titanium_Studio_Workspace/MindsMesh-Android/Resources/app.js => /Users/cstachowicz/Documents/Titanium_Studio_Workspace/MindsMesh-Android/build/android/bin/assets/Resources/app.js
 [DEBUG] LiveView not enabled
 [TRACE] Generating Java Classes
 [DEBUG] Processing Android resource drawables
@@ -72,7 +71,6 @@ Logfile initialized
 [DEBUG] from resource zip => assets/Resources/source_both/campus_map.js
 [DEBUG] from resource zip => assets/Resources/source_both/create_topic.js
 [DEBUG] from resource zip => assets/Resources/source_both/feed.js
-[DEBUG] from resource zip => assets/Resources/source_both/feed_old.js
 [DEBUG] from resource zip => assets/Resources/source_both/finish_verification.js
 [DEBUG] from resource zip => assets/Resources/source_both/grade_view.js
 [DEBUG] from resource zip => assets/Resources/source_both/join_school.js
@@ -206,8 +204,8 @@ Logfile initialized
 [DEBUG] installing native lib: /Users/cstachowicz/Library/Application Support/Titanium/modules/android/facebook/3.0.0/libs/x86/libfacebook.so
 [DEBUG] installing native SDK libs
 [DEBUG] Waiting for device to be ready ...
-[TRACE] adb devices returned 1 devices/emulators
+[TRACE] adb devices returned 2 devices/emulators
 [DEBUG] Device connected... (waited 0 seconds)
-[DEBUG] waited 0.012695 seconds on emulator to get ready
+[DEBUG] waited 0.012806 seconds on emulator to get ready
 [INFO] Installing application on device
 [INFO] Application installed. Launch from drawer on Home Screen

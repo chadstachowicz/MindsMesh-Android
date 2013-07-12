@@ -3,13 +3,13 @@ var win = Titanium.UI.currentWindow;
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
 				width:Ti.UI.Size,
-				height: 44,
+				height: '44dp',
 				left:0,
 				top:0,
 			});
 			var border = Ti.UI.createView({
 				backgroundColor:"black",
-				height:1,
+				height:'1dp',
 				bottom:0,
 				width: Ti.UI.Size
 			});
@@ -18,14 +18,13 @@ win.add(bar);
 var menuButton = Ti.UI.createImageView({
     image:'/images/Paragraph-Justify.png',
     toggle:false,
-    height: 30,
-    width:30,
+    height: '36dp',
+    width:'36dp',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',
 	borderRadius: 2,
 	left: 10
-
 });
 menuButton.addEventListener('click', function(e){
     Titanium.App.fireEvent('nav-menu-button',{data:e.source.toggle});
@@ -42,45 +41,12 @@ Titanium.App.addEventListener('main-win-close', function(e)
 });
 bar.add(menuButton);
 var data = [];
-if(Titanium.Platform.osname == 'iphone'){
-var label1 = Titanium.UI.createLabel({
-	text: 'Moodle Username',
-	top: 5,
-	height:40,
-	width: 320,
-	
-});
-var ta1 = Titanium.UI.createTextField({
-	value: Titanium.App.Properties.getString('moodle-user-' + selectedId),
-	hintText:"Moodle Username",
-	top: 5,
-	height:40,
-	width: 320,
-	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-	
-});
-var label2 = Titanium.UI.createLabel({
-	text: 'Moodle Password',
-	top: 5,
-	height:40,
-	width: 320,
-	
-});
-var ta2 = Titanium.UI.createTextField({	
-	value: Titanium.App.Properties.getString('moodle-pass-' + selectedId),
-	hintText:"Moodle Password",
-	passwordMask: true,
-	top: 5,
-	height:40,
-	width: 320,
-	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
-	
-});
-} else {
+
 	var label1 = Titanium.UI.createLabel({
 	text: 'Moodle Username',
-	top: 105,
+	top:'105dp',
 	color: "#000000",
+	font:{fontSize:'18dp',fontWeight:'bold'},
 	height:40,
 	width: 320,
 	
@@ -88,7 +54,7 @@ var ta2 = Titanium.UI.createTextField({
 	var ta1 = Titanium.UI.createTextField({
 	value: Titanium.App.Properties.getString('moodle-user-' + selectedId),
 	hintText:"Moodle Username",
-	top: 140,
+	top: '140dp',
 	font:{fontSize:18,fontWeight:'bold'},
    	height:'35dp',
 	width: 500,
@@ -97,8 +63,9 @@ var ta2 = Titanium.UI.createTextField({
 });
 var label2 = Titanium.UI.createLabel({
 	text: 'Moodle Password',
-	top: 175,
+	top: '175dp',
 	color: "#000000",
+	font:{fontSize:'18dp',fontWeight:'bold'},
 	height:40,
 	width: 320,
 	
@@ -107,26 +74,27 @@ var ta2 = Titanium.UI.createTextField({
 	value: Titanium.App.Properties.getString('moodle-pass-' + selectedId),
 	hintText:"Moodle Password",
 	passwordMask: true,
-	top: 210,
+	top: '210dp',
 	font:{fontSize:18,fontWeight:'bold'},
    	height:'35dp',
 	width: 500,
 	borderStyle:Titanium.UI.INPUT_BORDERSTYLE_ROUNDED,
 	
 });
-}
+
 
 
 
 var btnCreate = Titanium.UI.createButton({
 	title:'Verify',
-	height: 30,
-    width:'auto',
+	height: '36dp',
+    width:'60dp',
+    color: '#ffffff',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',
 	borderRadius: 2,
-	right: 10
+	right: '5dp'
 });
 
 bar.add(btnCreate);
@@ -180,7 +148,7 @@ xhr.onload = function(){
             data[c]=Ti.UI.createPickerRow({title:user.entity_users[c].entity.name,entity_id:user.entity_users[c].entity.id});
         }
         var picker = Ti.UI.createPicker({
-			top: 45,
+			top: '45dp',
 			//height: 160,
 			width: Titanium.UI.FILL
 		});
@@ -192,7 +160,7 @@ win.add(label1);
 win.add(ta1);
 win.add(label2);
 win.add(ta2);
-win.add(importWiz);
+//win.add(importWiz);
 
 	picker.add(data);
 	win.add(picker);

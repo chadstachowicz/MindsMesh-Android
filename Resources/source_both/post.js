@@ -3,27 +3,28 @@ var win = Titanium.UI.currentWindow;
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
 				width:Ti.UI.Size,
-				height: 44,
+				height: '44dp',
 				left:0,
 				top:0,
 			});
 			var border = Ti.UI.createView({
 				backgroundColor:"black",
-				height:1,
+				height:'1dp',
 				bottom:0,
-				width:Ti.UI.Size
+				width: Ti.UI.Size
 			});
 			bar.add(border);
 win.add(bar);
 var btnBack = Titanium.UI.createButton({
 	title:'Back',
-	height: 30,
-    width:'auto',
+	height: '36dp',
+    width:'60dp',
+    color: '#ffffff',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',
 	borderRadius: 2,
-	left: 10,
+	right: '5dp'
 });
 bar.add(btnBack);
 btnBack.addEventListener('click', function(){
@@ -80,25 +81,25 @@ var winModal = Ti.UI.createWindow({
 });
 
 
-		   		 var labelTitle = Titanium.UI.createLabel({
+		   	 var labelTitle = Titanium.UI.createLabel({
     			text:Titanium.App.Properties.getString("name"),
-    			font:{fontSize:16,fontWeight:'bold'},
+    			font:{fontSize:'16dp',fontWeight:'bold'},
     			color:'#000',
     			box: true,
    				width:'auto',
     			textAlign:'center',
-    			top: -37,
-    			left: 55,
+    			top: '-37dp',
+    			left: '55dp',
  
 			});
 			var labelTitle2 = Titanium.UI.createLabel({
     			text:'Notifications',
-    			font:{fontSize:12},
+    			font:{fontSize:'12dp'},
     			color:'#000',
     			box: true,
    				width:'auto',
     			textAlign:'center',
-    			left: 55,
+    			left: '55dp',
  
 			});
 		var seperatorPhone = Ti.UI.createView({
@@ -113,8 +114,8 @@ var winModal = Ti.UI.createWindow({
 				top: 10,
 				left: 10,
 				box:true,
-				height:40,
-				width:40,
+				height:'40dp',
+				width:'40dp',
 			});
 			 view.add(pict);
 		 view.add(labelTitle);
@@ -125,7 +126,7 @@ var winModal = Ti.UI.createWindow({
 var tableView = Titanium.UI.createTableView({
 	backgroundColor:'#46a546',
 	separatorColor: 'transparent',
-	top: 44,
+	top: '44dp',
 	left:0
 });
 
@@ -148,8 +149,8 @@ xhr.onload = function(){
 	if(user.unread.length > 0){
 		var notificationButton = Ti.UI.createButton({
     		backgroundImage:'../images/bell-light.png',
-    		height:27,
-    		width:27,
+    		height:'25dp',
+    		width:'25dp',
 		});
 		var label = Ti.UI.createLabel({
     		text: user.unread.length,
@@ -170,8 +171,8 @@ xhr.onload = function(){
 	} else {
 		var notificationButton = Ti.UI.createButton({
     		backgroundImage:'../images/bell.png',
-    		height:25,
-    		width:25,
+    		height:'25dp',
+    		width:'25dp',
 		});
 	}
 	bar.add(notificationButton);
@@ -183,7 +184,7 @@ xhr.onload = function(){
     			notification_id: user.unread[i].id,
     			id:user.unread[i].target_id,
     			type: user.unread[i].target_type,
-    			font:{fontSize:16,fontWeight:'bold'},
+    			font:{fontSize:'16dp',fontWeight:'bold'},
     			color:'#000',
    				width:'auto',
     			textAlign:'left',
@@ -196,9 +197,9 @@ xhr.onload = function(){
     			notification_id: user.unread[i].id,
     			id:user.unread[i].target_id,
     			type: user.unread[i].target_type,
-    			font:{fontSize:11},
+    			font:{fontSize:'11dp'},
     			color:'#000',
-    			height: 12,
+    			height: '13dp',
    				width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 45,
     			textAlign:'left',
     			left: 10
@@ -212,8 +213,8 @@ xhr.onload = function(){
 				id:user.unread[i].target_id,
 				type: user.unread[i].target_type,
 				box:true,
-				height:24,
-				width:24,
+				height:'24dp',
+				width:'24dp',
 			});
 		var fbRow = Titanium.UI.createTableViewRow({
                 backgroundColor:'#e2e7ed',
@@ -222,7 +223,7 @@ xhr.onload = function(){
                 id:user.unread[i].target_id,
                 type: user.unread[i].target_type,
                 layout: 'vertical',
-                height: 40
+                height: '42dp'
           });
             fbRow.add(classNumber);
             fbRow.add(classTitle);
@@ -236,7 +237,7 @@ xhr.onload = function(){
     			notification_id: user.read[i].id,
     			id:user.read[i].target_id,
     			type: user.read[i].target_type,
-    			font:{fontSize:16,fontWeight:'bold'},
+    			font:{fontSize:'16dp',fontWeight:'bold'},
     			color:'#000',
    				width:'auto',
     			textAlign:'left',
@@ -249,9 +250,9 @@ xhr.onload = function(){
     			notification_id: user.read[i].id,
     			id:user.read[i].target_id,
     			type: user.read[i].target_type,
-    			font:{fontSize:11},
+    			font:{fontSize:'11dp'},
     			color:'#000',
-    			height: 12,
+    			height: '13dp',
    				width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 45,
     			textAlign:'left',
     			left: 10
@@ -264,7 +265,7 @@ xhr.onload = function(){
                 id:user.read[i].target_id,
                 type: user.read[i].target_type,
                 layout: 'vertical',
-                height: 40
+                height: '42dp'
           });
             fbRow.add(classNumber);
             fbRow.add(classTitle);
@@ -278,8 +279,9 @@ xhr.onload = function(){
 				if (winModal.visible == true)
 				{
 					winModal.show();	
+				} else {
+					winModal.open();
 				}
-				winModal.open();
 				winModal.visible = true;
 			});
 			
@@ -289,17 +291,19 @@ xhr.onload = function(){
 xhr.send()
 }
 
+
 var brainlabel = [];
 var replybrainlabel = [];
 var btnPost = Titanium.UI.createButton({
-	title:'Answer',
-	height: 30,
-    width:'auto',
+	title:'Comment',
+	height: '36dp',
+    width:'85dp',
+    color: '#ffffff',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',
 	borderRadius: 2,
-	right: 10
+	right: '5dp'
 });
 
 btnPost.addEventListener('click', function(e){
@@ -432,22 +436,22 @@ xhr.onload = function(){
                 text: fullname,
                 backgroundColor:'#ecfaff',
 				textAlign:'left',
-				left:80,
+				left:'65dp',
 				height:'auto',
-				top: -55,
+				top: '-45dp',
 				color:'#46a546',
-				font:{fontWeight:'bold',fontSize:20}
+				font:{fontWeight:'bold',fontSize:'18dp'}
 			});
 			var timetext = timeDifference(d,post.created_at);
 			var postTime = Titanium.UI.createLabel({
                 text: timetext,
                 backgroundColor:'#ecfaff',
 				textAlign:'left',
-		left:80,
-		top: 10,
+		left:'65dp',
+		top: 5,
 		height:'auto',
 		color:'#808080',
-		font:{fontSize:14}
+		font:{fontSize:'12dp'}
 		});
 		           var w = Titanium.Platform.displayCaps.platformWidth;
     var h = Titanium.Platform.displayCaps.platformHeight;
@@ -466,7 +470,7 @@ xhr.onload = function(){
 		top:5,
 		height:Ti.UI.SIZE,
 		color:'#000000',
-		font:{fontSize:13},
+		font:{fontSize:'15dp'},
             });
 	var commentHolder = Ti.UI.createView({
 		backgroundColor: '#ecfaff',
@@ -480,8 +484,8 @@ xhr.onload = function(){
 				image: picUrl,
 				top: 15,
 				left: 15,
-				height:50,
-				width:50,
+				height:'40dp',
+				width:'40dp',
 			});
 			commentHolder.add(pict);
             commentHolder.add(fbName);
@@ -572,15 +576,15 @@ xhr.onload = function(){
 					textAlign: 'center',
 					color: '#000000',
 					left: 50,
-					top: -29,
-					font:{fontSize:14, color: '#fff'}
+					top: -25,
+					bottom: 15,
+					font:{fontSize:14, color: '#fff', fontWeight:'bold'}
 					});
 					var paperclip = Titanium.UI.createImageView({
 					image: '/images/paperclip4_black.png',
 					left: 15,
-					top: 5,
+					top: 10,
 					height:32,
-					bottom: 10,
 					width:32,
 				});
 				commentHolder.add(paperclip);
@@ -614,22 +618,22 @@ xhr.onload = function(){
                 text: fullname,
                 backgroundColor:"#e2e7ed",
 				textAlign:'left',
-				left:80,
+				left:'65dp',
 				height:'auto',
-				top: -55,
+				top: '-37dp',
 				color:'#46a546',
-				font:{fontWeight:'bold',fontSize:13}
+				font:{fontWeight:'bold',fontSize:'18dp'}
 			});
 			var timetext = timeDifference(d,reply.created_at);
 			var postTime = Titanium.UI.createLabel({
                 text: timetext,
                 backgroundColor:"#e2e7ed",
 				textAlign:'left',
-		left:80,
+		left:'65dp',
 		height:'auto',
-		top: 10,
+		top: 5,
 		color:'#808080',
-		font:{fontSize:11}
+		font:{fontSize:'12dp'}
 		});
 		           var w = Titanium.Platform.displayCaps.platformWidth;
     var h = Titanium.Platform.displayCaps.platformHeight;
@@ -644,11 +648,11 @@ xhr.onload = function(){
                 backgroundColor:"#e2e7ed",
 		textAlign:'left',
 		width: comWidth - 120,
-		left:80,
+		left:'65dp',
 		top:5,
 		height:Ti.UI.SIZE,
 		color:'#000000',
-				font:{fontSize:13},
+				font:{fontSize:'15dp'},
             });
 	var commentHolder = Ti.UI.createView({
 		backgroundColor: "#e2e7ed",
@@ -660,8 +664,8 @@ xhr.onload = function(){
 				image: picUrl,
 				top: 15,
 				left: 15,
-				height:50,
-				width:50,
+				height:'40dp',
+				width:'40dp',
 			});
 			
 			commentHolder.add(pict);
@@ -849,7 +853,7 @@ var winModalFiles = Ti.UI.createWindow({
 
 		   		 var labelTitleFiles = Titanium.UI.createLabel({
     			text:'Files',
-    			font:{fontSize:16,fontWeight:'bold'},
+    			font:{fontSize:'16dp',fontWeight:'bold'},
     			color:'#000',
     			box: true,
    				width:Ti.UI.Size,
@@ -873,12 +877,11 @@ var winModalFiles = Ti.UI.createWindow({
    		 var classNumber = Titanium.UI.createLabel({
     			text:post.post_attachments[c].name,
     			url: post.post_attachments[c].url,
-    			font:{fontSize:14,fontWeight:'bold'},
+    			font:{fontSize:'14dp',fontWeight:'bold'},
     			color:'#000',
    				width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 10,
-   				height: '36',
-   				top: 2,
    				box:true,
+   				top: '10dp',
     			textAlign:'left',
     			left: 10
  
@@ -889,7 +892,7 @@ var winModalFiles = Ti.UI.createWindow({
     			url: post.post_attachments[c].url,
                 layout: 'vertical',
                 box:true,
-                height: 40
+                height: '40dp'
           });
             fbRow.add(classNumber);
          modalTableViewFiles.appendRow(fbRow);
@@ -970,7 +973,8 @@ xhr.send();
         		 	backgroundColor : '#00000000',
         			barColor: '#46a546',
         			title: 'Video',
-        			orientationModes:[Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT,Ti.UI.PORTRAIT,Ti.UI.UPSIDE_PORTRAIT]
+        			orientationModes:[Ti.UI.LANDSCAPE_LEFT, Ti.UI.LANDSCAPE_RIGHT,Ti.UI.PORTRAIT,Ti.UI.UPSIDE_PORTRAIT],
+        			fullscreen:true,
 
 				});
 				var activeMovie = Ti.Media.createVideoPlayer({

@@ -35,6 +35,8 @@ var confirm = Titanium.UI.createButton({
 						var user = JSON.parse(response);
 						if(user.entity_users.length > 0)
 						{
+							Titanium.App.Properties.setString("logged_in", 'true');
+							Titanium.App.Properties.setString("num_entities",1);
 							if(Titanium.App.Properties.getString("moodle_entity_id") != false && Titanium.App.Properties.hasProperty('moodle-user') == false){
 								Titanium.App.fireEvent('loadMoodleAccount');
 							} else {
@@ -71,6 +73,7 @@ var confirm = Titanium.UI.createButton({
     				title:'Confirm School Email',
    					url:'source_both/join_school.js',
     				barColor: '#46a546',
+    				modal: true,
    	    			backgroundColor:'#ecfaff',
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis

@@ -4,15 +4,15 @@ win.layout = 'vertical';
 var bar = Ti.UI.createView({
 				backgroundColor:'#46a546',
 				width:Ti.UI.Size,
-				height: 44,
-				left: 0,
+				height: '44dp',
+				left:0,
 				top:0,
 			});
 			var border = Ti.UI.createView({
 				backgroundColor:"black",
-				height:1,
+				height:'1dp',
 				bottom:0,
-				width:Ti.UI.Size
+				width: Ti.UI.Size
 			});
 			bar.add(border);
 win.add(bar);
@@ -122,8 +122,8 @@ var winModal = Ti.UI.createWindow({
 var menuButton = Ti.UI.createImageView({
     image:'/images/Paragraph-Justify.png',
     toggle:false,
-    height: 30,
-    width:30,
+    height: '36dp',
+    width:'36dp',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',

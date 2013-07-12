@@ -34,7 +34,7 @@ var menuWindow = Ti.UI.createWindow({
 var menuTableView = Ti.UI.createTableView({
     backgroundColor:'#252525',
     separatorColor: '#000',
-    width: 260,
+    width: '260dp',
     left:0
 });
 
@@ -73,6 +73,7 @@ Titanium.App.addEventListener('reloadMenu', function(e)
 });
 Titanium.App.addEventListener('loadFeed', function(e)
 {   
+	win.close();
 	reloadMenu();
 	var win2 = Titanium.UI.createWindow({  
    					url:'source_both/feed.js',
@@ -255,7 +256,7 @@ Titanium.App.addEventListener('nav-menu-button', function(e)
     // If the menu isn't opened
     else{
         navWindow.animate({
-            left:260,
+            left:'260dp',
             duration:75,
             curve:Ti.UI.ANIMATION_CURVE_EASE_IN_OUT
         });
@@ -294,31 +295,44 @@ function reloadMenu(){
 	menuWindow.open();
 	menuTableView.data = [];
 	xhr = getUserWithChildren(Titanium.App.Properties.getString('mmat'),Titanium.App.Properties.getString('userid'));
+	xhr.onerror = function(){
+		Titanium.App.Properties.setString("logged_in", 'false');
+   				 	fb.logout();
+				reopenLogin();
+				menuWindow.close();
+				Titanium.App.fireEvent('main-win-close');
+				navWindow.close();
+	};
 	xhr.onload = function(){
 	var response = this.responseText;
 	user = JSON.parse(response);
+	var section1HeaderView = Ti.UI.createView({ height: '30dp' });
+    var section1HeaderLabel = Ti.UI.createLabel({ text: 'Menu', font:{fontSize:'14dp'}});
+    section1HeaderView.add(section1HeaderLabel);
+    var headerSection = Ti.UI.createTableViewSection({
+                        headerView: section1HeaderView
+                    });
 	var fbRow1 = Titanium.UI.createTableViewRow({
  	         	header:'Menu',
  	         	id: 1,
                 backgroundColor:'#252525',
-				height:40
+				height:'40dp'
             });
 var labelTitle = Titanium.UI.createLabel({
     			text:'Feed',
     			id: 1,
-    			font:{fontSize:16},
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45
+    			left: '40dp'
 			});
 			var labelIcon = Titanium.UI.createImageView({
 				image: Titanium.App.Properties.getString("photo_url"),
 				id: 1,
 				left: 4,
-				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 			});
 fbRow1.add(labelIcon);
 fbRow1.add(labelTitle);
@@ -326,132 +340,132 @@ var fbRow6 = Titanium.UI.createTableViewRow({
 				header:'Settings',
                 backgroundColor:'#252525',
                 id: 6,
-				height:40
+				height:'40dp'
             });
 var labelTitle = Titanium.UI.createLabel({
     			text:'Log Out',
-    			font:{fontSize:16},
     			id: 6,
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45
+    			left: '40dp'
 			});
 			var labelIcon = Titanium.UI.createImageView({
 				image: 'images/exit.png',
 				id: 6,
 				left: 4,
 				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 			});
 fbRow6.add(labelIcon);
 fbRow6.add(labelTitle);
 var fbRow8 = Titanium.UI.createTableViewRow({
                 backgroundColor:'#252525',
                 id: 8,
-				height:40
+				height:'40dp'
             });
 var labelTitle = Titanium.UI.createLabel({
     			text:'Add Class....',
     			id: 8,
-    			font:{fontSize:16},
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45
+    			left: '40dp'
 			});
 			var labelIcon = Titanium.UI.createImageView({
 				image: 'images/emblem_library.png',
 				id: 8,
 				left: 4,
 				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 			});
 fbRow8.add(labelIcon);
 fbRow8.add(labelTitle);
 var fbRow11 = Titanium.UI.createTableViewRow({
                 backgroundColor:'#252525',
                 id: 11,
-				height:40
+				height:'40dp'
             });
 var labelTitle = Titanium.UI.createLabel({
     			text:'Add Group....',
     			id: 11,
-    			font:{fontSize:16},
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45
+    			left: '40dp'
 			});
 			var labelIcon = Titanium.UI.createImageView({
 				image: 'images/emblem_library.png',
 				id: 11,
 				left: 4,
 				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 			});
 fbRow11.add(labelIcon);
 fbRow11.add(labelTitle);
 var fbRow9 = Titanium.UI.createTableViewRow({
                 backgroundColor:'#252525',
                 id: 9,
-				height:40
+				height:'40dp'
             });
 var labelTitle = Titanium.UI.createLabel({
     			text:'Campus Map',
     			id: 9,
-    			font:{fontSize:16},
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45
+    			left: '40dp'
 			});
 			var labelIcon = Titanium.UI.createImageView({
 				image: 'images/04_maps.png',
 				id: 9,
 				left: 4,
 				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 			});
 fbRow9.add(labelIcon);
 fbRow9.add(labelTitle);
 var fbRow10 = Titanium.UI.createTableViewRow({
                 backgroundColor:'#252525',
                 id: 10,
-				height:40
+				height:'40dp'
             });
 var labelTitle = Titanium.UI.createLabel({
     			text:'Moodle Account',
-    			font:{fontSize:16},
     			id: 10,
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45
+    			left: '40dp'
 			});
 var labelIcon = Titanium.UI.createImageView({
 				image: 'images/run.png',
 				id: 10,
 				left: 4,
 				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 			});
 fbRow10.add(labelIcon);
 fbRow10.add(labelTitle);
-if(Titanium.App.Properties.getString("moodle_entity_2") == 2){
-menuTitles = [fbRow1, fbRow9] } else{
+//if(Titanium.App.Properties.getString("moodle_entity_2") == 2){
+//menuTitles = [fbRow1, fbRow9] } else{
 	menuTitles = [fbRow1];
-}
+//}
 	for(c=0;c<user.topic_users.length;c++){
             var fbRow = Titanium.UI.createTableViewRow({
                 backgroundColor:'#252525',
                 id: 7,
-				height:40,
+				height:'40dp',
 				moodle: false,
 				number: user.topic_users[c].topic.number,
 				entity_id: user.topic_users[c].topic.entity_id,
@@ -461,12 +475,12 @@ menuTitles = [fbRow1, fbRow9] } else{
             if (c==0){fbRow.header = 'Classes'}
 			var labelTitle = Titanium.UI.createLabel({
     			text:user.topic_users[c].topic.number,
-    			font:{fontSize:16},
     			id: 7,
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45,
+    			left: '40dp',
     			moodle: false,
     			entity_id: user.topic_users[c].topic.entity_id,
     			number:user.topic_users[c].topic.number,
@@ -477,8 +491,8 @@ menuTitles = [fbRow1, fbRow9] } else{
 				id: 7,
 				left: 4,
 				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 				moodle: false,
 				entity_id: user.topic_users[c].topic.entity_id,
     			number:user.topic_users[c].topic.number,
@@ -504,7 +518,7 @@ menuTitles = [fbRow1, fbRow9] } else{
             var fbRow = Titanium.UI.createTableViewRow({
                 backgroundColor:'#252525',
                 id: 2,
-				height:40,
+				height:'40dp',
 				moodle: false,
 				extraData: user.group_users[c].group.id
             });
@@ -512,12 +526,12 @@ menuTitles = [fbRow1, fbRow9] } else{
 			var labelTitle = Titanium.UI.createLabel({
     			text:user.group_users[c].group.name,
     			name:user.group_users[c].group.name,
-    			font:{fontSize:16},
     			id: 2,
+    			font:{fontSize:'16dp'},
     			color:'#e2e7ed',
    				width:'auto',
     			textAlign:'left',
-    			left: 45,
+    			left: '40dp',
     			moodle: false,
                 extraData: user.group_users[c].group.id
 			});
@@ -526,8 +540,8 @@ menuTitles = [fbRow1, fbRow9] } else{
 				id: 2,
 				left: 4,
 				top: 4,
-				height:32,
-				width:32,
+				height:'32dp',
+				width:'32dp',
 				moodle: false,
 				name: user.group_users[c].group.name,
                 extraData: user.group_users[c].group.id
@@ -592,8 +606,7 @@ var pict = Titanium.UI.createImageView({
 } else {
 	var pict = Titanium.UI.createImageView({
 				image: 'images/Mindsmesh_logo_highres.png',
-				top: 50,
-				bottom: 50
+				top: '50dp',
 			});
 }
 win.add(pict);
@@ -604,14 +617,16 @@ win.add(pict);
     	title: 'Login',
    		toggle:false,
     	width:200,
-		bottom: 30
+    	height: '45dp',
+		bottom: '15dp'
 	});
 	loginButton.addEventListener('click',function(e){
-		var win_height = 380;
+		var win_height = '400dp';
    		var win_width = Ti.Platform.displayCaps.platformWidth * .85;
  		var headerLabel = Ti.UI.createLabel({
 		text:"Please login below",
-		font:{fontSize:16,fontWeight:'bold'},
+		color: '#000000',
+		font:{fontSize:'16dp',fontWeight:'bold'},
 		textAlign:'center',
 		box: true,
 		top: 15
@@ -645,7 +660,7 @@ win.add(pict);
 	});
 	var signinButton = Ti.UI.createButton(
 	{
-    	title: 'Sign In',
+    	title: 'Login',
    		toggle:false,
     	font:{fontSize:18,fontWeight:'bold'},
    	 	height:'35dp',
@@ -690,9 +705,10 @@ win.add(pict);
 			})
 				var orLabel2 = Ti.UI.createLabel({
 				text:"or",
-				font:{fontSize:16,fontWeight:'bold'},
+				font:{fontSize:'16dp',fontWeight:'bold'},
+				color: '#000000',
 				box: true,
-				top: 30
+				top: 10
 			}); 
  		var view = Ti.UI.createView(
     	{
@@ -713,8 +729,9 @@ win.add(pict);
    		 view.add(signinButton);
    		 view.add(orLabel2);
    		 view.add(fb.createLoginButton({
-		style:fb.BUTTON_STYLE_WIDE,
-		top: 30
+				style:fb.BUTTON_STYLE_WIDE,
+				height: '35dp',
+				top: 10
 	}));
    		 shareWhoModal2.add(view);
 		 shareWhoModal2.addEventListener('click', function(e)
@@ -732,10 +749,11 @@ win.add(pict);
     	title: 'Sign Up',
    		toggle:false,
     	width:200,
-		bottom: 90
+		bottom: '80dp',
+		height: '45dp'
 	});
 	signupButton.addEventListener('click',function(e){
-		var win_height = 480;
+		var win_height = '400dp';
    		var win_width = Ti.Platform.displayCaps.platformWidth * .85;
    		var namesa = Titanium.UI.createTextField({
    		font:{fontSize:18,fontWeight:'bold'},
@@ -800,7 +818,6 @@ win.add(pict);
 			xhr.onload = function(e){
 				    var response = this.responseText;
 					var user = JSON.parse(response);
-					alert(user);
 					for (i=0;i<user.entity_users.length;i++){
 						if (user.entity_users[i].entity.moodle_url != null)
 						{
@@ -845,10 +862,10 @@ win.add(pict);
 	})
 	var headerLabel = Ti.UI.createLabel({
 		text:"Provide the information below to finish signup",
-		font:{fontSize:16,fontWeight:'bold'},
+		color: '#000000',
+		font:{fontSize:'16dp',fontWeight:'bold'},
 		box: true,
 		textAlign:'center',
-		color: '#00000',
 		top: 15
 	});
 	var seperatorPhone = Ti.UI.createView({
@@ -860,9 +877,9 @@ win.add(pict);
 				});
 		var orLabel2 = Ti.UI.createLabel({
 				text:"or",
-				color: "#000000",
+				font:{fontSize:'16dp',fontWeight:'bold'},
+				color: '#000000',
 				box: true,
-				font:{fontSize:16,fontWeight:'bold'},
 				top: 10
 			});
  		var view = Ti.UI.createView(
@@ -885,9 +902,10 @@ win.add(pict);
    		 view.add(passwordconfsa);
    		 view.add(finishsignupButton);
    		 view.add(orLabel2);
-   		 view.add(fb.createLoginButton({
-		style:fb.BUTTON_STYLE_WIDE,
-		top: 10
+   			 view.add(fb.createLoginButton({
+				style:fb.BUTTON_STYLE_WIDE,
+				height: '35dp',
+				top: 10
 	}));
    		 shareWhoModal3.add(view);
 		 shareWhoModal3.addEventListener('click', function(e)
@@ -986,8 +1004,9 @@ var win1 = Titanium.UI.createWindow({
 });
 	var win4 = Titanium.UI.createWindow({  
     				title:'Confirm School Email',
-   					url:'source_both/join_school.js',
+   					url:'source_both/finish_verification.js',
     				barColor: '#46a546',
+    				modal: true,
    	    			backgroundColor:'#ecfaff',
        				moving:false, // Custom property for movement
        				axis:0 // Custom property for X axis
@@ -1001,8 +1020,9 @@ var win1 = Titanium.UI.createWindow({
        				axis:0 // Custom property for X axis
     			 });
 if (Titanium.App.Properties.getString("num_entities") == 0){
-
+win.open();
 navWindow = win4;
+navWindow.open();
 
 //} else if (Titanium.App.Properties.getString("num_entities") > 0 && Titanium.App.Properties.getString("moodle_entity_id") != false && Titanium.App.Properties.getString("num_topics") == 0){
 	
@@ -1010,10 +1030,11 @@ navWindow = win4;
 
 } else {
 navWindow = win1;
-}
-
 navWindow.open();
 win.close();
+}
+
+
 }
 
 
