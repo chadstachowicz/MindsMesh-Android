@@ -1,4 +1,11 @@
 Ti.include("model/api.js");
+
+
+
+var emp = "";
+
+
+
 var win = Titanium.UI.currentWindow;
 win.layout = 'vertical';
 var bar = Ti.UI.createView({
