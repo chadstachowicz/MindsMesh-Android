@@ -1,4 +1,14 @@
 Ti.include("model/api.js");
+
+
+
+Titanium.API.info('********************************************************************');
+Titanium.API.info('APPLICATION STARTED - FEED');
+Titanium.API.info('*******************************************************************');
+
+
+
+
 var AWS = require('modules/amazon').load();
 var row_data = [];
 var offset = 0;
@@ -8,57 +18,254 @@ var f;
 var openWindowsToClose = [];
 var currentFile = '';
 var win = Titanium.UI.currentWindow;
+
+
+
+var win_height = 380;
+var win_width = Ti.Platform.displayCaps.platformWidth * .85;
+
+
+
+
+
+//static things, buttons labels and tabs
+//***********************************************************************************************
 var bar = Ti.UI.createView({
-				backgroundColor:'#46a546',
-				width:Ti.UI.Size,
-				height: '44dp',
-				left:0,
-				top:0,
-			});
-			var border = Ti.UI.createView({
-				backgroundColor:"black",
-				height:'1dp',
-				bottom:0,
-				width: Ti.UI.Size
-			});
-			bar.add(border);
-win.add(bar);
+	backgroundColor:'#46a546',
+	width:Ti.UI.Size,
+	height: '44dp',
+	left:0,
+	top:0,
+});
+
+
+var border = Ti.UI.createView({
+	backgroundColor:"black",
+	height:'1dp',
+	bottom:0,
+	width: Ti.UI.Size
+});
 
 var btnShare = Titanium.UI.createButton({
 	title:'Share',
 	height: '36dp',
-    width:'60dp',
-    color: '#ffffff',
+	width:'60dp',
+	color: '#ffffff',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',
 	borderRadius: 2,
 	right: '5dp'
 });
+
 var btnMoodle = Titanium.UI.createButton({
 	title:'Moodle',
 	height: '36dp',
-    width:'auto',
-     color: '#ffffff',
+	width:'auto',
+ 	color: '#ffffff',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',
 	borderRadius: 2,
 	right: '65dp'
 });
+
 var menuButton = Ti.UI.createImageView({
     image:'/images/Paragraph-Justify.png',
-    toggle:false,
-    height: '36dp',
-    width:'36dp',
+	toggle:false,
+	height: '36dp',
+	width:'36dp',
 	backgroundColor:'#347235',
 	borderWidth: 1,
 	borderColor: 'black',
 	borderRadius: 2,
 	left: 10
-
 });
+
+
+//not sure
+var loadView = Ti.UI.createWindow({
+	backgroundColor: 'black',
+    opacity: .90,
+    height: Ti.Platform.displayCaps.platformHeight,
+    width: Ti.Platform.displayCaps.platformWidth
+});
+ 
+ 
+var loadIndicator = Ti.UI.createActivityIndicator({
+    style: Ti.UI.iPhone.ActivityIndicatorStyle.PLAIN,
+    message: 'Loading Moodle...',
+	font : 'Arial',
+	color: '#FFF'
+});
+
+var shareModal = Ti.UI.createWindow(
+{
+	backgroundColor : '#B0000000',
+	modal: true
+});
+
+var shareWhoModal = Ti.UI.createWindow(
+{
+    backgroundColor : '#B0000000',
+    zIndex: 1
+});
+
+
+var view = Ti.UI.createView(
+{
+	backgroundColor : '#e2e7ed',
+	borderColor : '#A5A5A5',
+	box: true,
+	borderRadius : 15,
+	top: 0,
+	layout: 'vertical',
+    borderWidth : 2,
+    width : win_width,
+    height : win_height
+});
+var messageButton = Ti.UI.createButton(
+{
+	title: 'Status',
+	toggle:false,
+	font:{fontSize:18,fontWeight:'bold'},
+	height:'50dp',
+    width:200,
+	top: 10
+});
+
+var photoButton = Ti.UI.createButton({
+    title: 'Photo',
+	toggle:false,
+	font:{fontSize:18,fontWeight:'bold'},
+	height:'50dp',
+    width:200,
+    top: 10
+});
+
+//video and button 
+var videoButton = Ti.UI.createButton(
+{
+    title: 'Video',
+	toggle:false,
+	font:{fontSize:18,fontWeight:'bold'},
+	height:'50dp',
+    width:200,
+	top: 10
+});
+
+
+
+
+
+var finishButton = Ti.UI.createButton({
+	title: 'Finish',
+	toggle:false,
+	font:{fontSize:18,fontWeight:'bold'},
+	height:'37dp',
+	width:200,
+	box: true,
+	top: 10
+});
+
+
+var labelTitle2 = Titanium.UI.createLabel({
+	text:'Add a message and share',
+	font:{fontSize:12},
+	color:'#000',
+	box: true,
+	width:'auto',
+	textAlign:'center',
+	left: 55
+});
+var seperatorPhone = Ti.UI.createView({
+	backgroundColor: "#808080",
+	width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 10,
+	top: 7,
+	box: true,
+	height:2,
+});
+
+
+
+
+var voiceButton = Ti.UI.createButton({
+	title: 'Voice',
+	toggle:false,
+	height: 30,
+	width:200,
+	top: 10
+});
+
+var winModal = Ti.UI.createWindow({
+    backgroundColor : '#B0000000',
+    visible: false
+});
+
+var view = Ti.UI.createView({
+	backgroundColor : '#e2e7ed',
+	borderColor : '#A5A5A5',
+	box: true,
+	borderRadius : 15,
+	top: 50,
+	layout: 'vertical',
+	borderWidth : 2,
+	width : win_width,
+	height : win_height
+ });
+var modalTableView = Titanium.UI.createTableView({
+	backgroundColor:'#e2e7ed',
+	box: true
+});
+
+
+var notificationButton = Ti.UI.createButton({
+	backgroundImage:'../images/bell-light.png',
+	height:'30dp',
+	width:'30dp',
+});
+	
+	
+	
+var border = Ti.UI.createView({
+	backgroundColor:"#576c89",
+	height:2,
+	bottom:0
+});
+
+var tableHeader = Ti.UI.createView({
+	backgroundColor:"#e2e7ed",
+	width:320,
+	height:60
+});
+var arrow = Ti.UI.createView({
+	backgroundImage:"../images/whiteArrow.png",
+	width:23,
+	height:60,
+	bottom:10,
+	left:20
+});
+ 
+//***********************************************************************************************
+//static things, buttons labels and tabs
+
+
+
+
+
+
+bar.add(border);		
+win.add(bar);
+
+
+
+Titanium.API.warn('black bar added to window');	
+
+
 bar.add(menuButton);
+Titanium.API.warn('menu button added to bar');	
+
+
 
 menuButton.addEventListener('click', function(e){
     Titanium.App.fireEvent('nav-menu-button',{data:e.source.toggle});
@@ -70,52 +277,56 @@ menuButton.addEventListener('click', function(e){
 if (win.topic_id != null)
 {
 	if (win.moodle != null){
-
+	    Titanium.API.warn('moodle and share added to bar');	
 		bar.add(btnShare);
 		bar.add(btnMoodle);
 	} else {
 		bar.add(btnShare);
+	    Titanium.API.warn('share added to bar');			
 	}
 	btnShare.addEventListener('click', function(e) {
-
-    	shareModal.open();
+		shareModal.open();
 		shareModal.visible = true;
 	});
+	
+	
+	
+	
+//************MOODLE************************************************
    btnMoodle.addEventListener('click', function(e) {
    	if (Titanium.App.Properties.hasProperty('moodle-user-' + win.entity_id) == false || Titanium.App.Properties.hasProperty('moodle-user-' + win.entity_id) == null || Titanium.App.Properties.hasProperty('moodle-pass-' + win.entity_id) == false || Titanium.App.Properties.hasProperty('moodle-pass-' + win.entity_id) == null)
   	{
    		Titanium.App.fireEvent('loadMoodleAccount');
   	} else {
-
- 
-	loadView.add(loadIndicator);
-	loadView.open();
-	loadIndicator.show();
-	if (win.entity_id == 2)
-	{
-		var postData = {username: Titanium.App.Properties.getString('moodle-user-' + win.entity_id), password: Titanium.App.Properties.getString('moodle-pass-' + win.entity_id)};	
-  		xhr = postLoginToMoodle(win.moodle,postData);
-		xhr.onload = function(){
-		var response = this.responseText;
-		var regexSess = /Your\ssession\shas/i;
-		var regexSess2 = /your\slogin\ssession/i;
-		var regexLog = /Invalid\slogin/i;
-		if(response.match(regexSess2)) 
+		loadView.add(loadIndicator);
+		loadView.open();
+		loadIndicator.show();
+		if (win.entity_id == 2)
 		{
-			xhr = postLoginToMoodle(win.moodle,postData);
-			xhr.onload = function()
+			var postData = {username: Titanium.App.Properties.getString('moodle-user-' + win.entity_id), password: Titanium.App.Properties.getString('moodle-pass-' + win.entity_id)};	
+	  		xhr = postLoginToMoodle(win.moodle,postData);
+			xhr.onload = function(){
+			var response = this.responseText;
+			var regexSess = /Your\ssession\shas/i;
+			var regexSess2 = /your\slogin\ssession/i;
+			var regexLog = /Invalid\slogin/i;
+			if(response.match(regexSess2)) 
 			{
-				var response2 = this.responseText;
-				redirectToMoodle(response2);
-			};
-			xhr.send(postData);
-		} else if(response.match(regexLog)) {
-			alert('These are not valid credentials.  Please correct them.');
-		} else {
-			redirectToMoodle(response);
+				xhr = postLoginToMoodle(win.moodle,postData);
+				xhr.onload = function()
+				{
+					var response2 = this.responseText;
+					redirectToMoodle(response2);
+				};
+				xhr.send(postData);
+			} else if(response.match(regexLog)) {
+				alert('These are not valid credentials.  Please correct them.');
+			} else {
+				redirectToMoodle(response);
+			}
 		}
-	}
-	xhr.send(postData);
+		xhr.send(postData);
+		
 	} else {
 		xhr = getMoodle2EnrolledCourses(Titanium.App.Properties.getString("moodle_url_" + win.entity_id),Titanium.App.Properties.getString("moodle-token-" + win.entity_id),Titanium.App.Properties.getString("moodle-userid-" + win.entity_id));
 		xhr.onload = function()
@@ -146,33 +357,17 @@ if (win.topic_id != null)
  });
 //win.setRightNavButton(btnBar);
 
-  	var loadView = Ti.UI.createWindow({
-    	backgroundColor: 'black',
-    	opacity: .90,
-    	height: Ti.Platform.displayCaps.platformHeight,
-    	width: Ti.Platform.displayCaps.platformWidth
-	});
- 
-	var loadIndicator = Ti.UI.createActivityIndicator({
-    	style: Ti.UI.iPhone.ActivityIndicatorStyle.BIG,
-    	message: 'Loading Moodle...',
-    	font : 'Arial',
-    	color: '#FFF'
-	});
+
 } else {
 	
-btnShare.addEventListener('click', function(e){
-				shareModal.open();
-				shareModal.visible = true;
-});
-bar.add(btnShare);
+	btnShare.addEventListener('click', function(e){
+		shareModal.open();
+		shareModal.visible = true;
+	});
+	bar.add(btnShare);
 }
 
-var shareWhoModal = Ti.UI.createWindow(
-{
-    backgroundColor : '#B0000000',
-    zIndex: 1
-});
+
 shareWhoModal.addEventListener('click', function(e)
 {
 	if(e.source.box != true)
@@ -195,11 +390,7 @@ shareWhoModal.addEventListener('click', function(e)
  		dlg.show();
  	}
 });
-var shareModal = Ti.UI.createWindow(
-{
-	backgroundColor : '#B0000000',
-	modal: true
-});
+
 shareModal.addEventListener('click', function(e)
 {
 	if(e.source.box != true)
@@ -207,39 +398,17 @@ shareModal.addEventListener('click', function(e)
  		shareModal.close();
  	}
 });
-var win_height = 380;
-var win_width = Ti.Platform.displayCaps.platformWidth * .85;
-var view = Ti.UI.createView(
-{
-	backgroundColor : '#e2e7ed',
-    borderColor : '#A5A5A5',
-    box: true,
-    borderRadius : 15,
-    top: 50,
-    layout: 'vertical',
-    borderWidth : 2,
-    width : win_width,
-    height : win_height
-});
-var messageButton = Ti.UI.createButton(
-{
-	title: 'Status',
-    toggle:false,
-    font:{fontSize:18,fontWeight:'bold'},
-   	height:'37dp',
-    width:200,
-	top: 10
-});
+
 messageButton.addEventListener('click', function(e)
 {
-					if(win.topic_id != null)
-					{
-						var title = win.class_number;
-					} else if (win.group_id != null) {		
-						var title = win.group_name;
-					} else {					
-						var title = "Status";
-					}
+	if(win.topic_id != null)
+	{
+		var title = win.class_number;
+	} else if (win.group_id != null) {		
+		var title = win.group_name;
+	} else {					
+		var title = "Status";
+	}
 	var win1 = Titanium.UI.createWindow(
 	{  
 		title: title,
@@ -252,14 +421,7 @@ messageButton.addEventListener('click', function(e)
     });
     win1.open();
 });
-var photoButton = Ti.UI.createButton({
-    title: 'Photo',
-   	toggle:false,
-    font:{fontSize:18,fontWeight:'bold'},
-   	height:'37dp',
-    width:200,
-    top: 10
-});
+
 photoButton.addEventListener('click', function(e)
 {
 	Titanium.Media.showCamera(
@@ -267,8 +429,6 @@ photoButton.addEventListener('click', function(e)
 		success:function(event)
   		{
   			
-  			var win_height = 380;
-   				var win_width = Ti.Platform.displayCaps.platformWidth * .85;
  				var view = Ti.UI.createView(
     			{
         			backgroundColor : '#e2e7ed',
@@ -315,15 +475,7 @@ photoButton.addEventListener('click', function(e)
         				e.source.value = e.source._hintText;
     				}
 				});
-				var finishButton = Ti.UI.createButton({
-    				title: 'Finish',
-   			 		toggle:false,
-    				font:{fontSize:18,fontWeight:'bold'},
-   	 				height:'37dp',
-    				width:200,
-					box: true,
-					top: 10
-				});
+
 				finishButton.addEventListener('click', function(e)
 				{
 					if (ta1.value == "Enter a message!")
@@ -339,7 +491,7 @@ photoButton.addEventListener('click', function(e)
 						var postData = {'text': ta1.value, 'filename': 'post.png', 'content_type': currentFile.mimeType};
 					}
 							xhr = postPostCreate(Titanium.App.Properties.getString('mmat'),postData);
-							var pb = Ti.UI.createProgressBar({
+							/*var pb = Ti.UI.createProgressBar({
 								zIndex:50,
 								width:250,
     							height:'auto',
@@ -352,6 +504,23 @@ photoButton.addEventListener('click', function(e)
     							font:{fontSize:14, fontWeight:'bold'},
    				 				style:Titanium.UI.iPhone.ProgressBarStyle.PLAIN
    				 			});
+   				 			*/
+   				 			
+   				 			
+   				 			var pb = Ti.UI.Android.createProgressIndicator({
+							  message: 'Loading...',
+							  location: Ti.UI.Android.PROGRESS_INDICATOR_DIALOG,
+							  type: Ti.UI.Android.PROGRESS_INDICATOR_DETERMINANT,
+							  cancelable: true,
+							  min: 0,
+							  max: 1,
+							  zIndex:50,
+								width:250,
+								height:'auto'
+							});
+   				 			
+   				 			
+   				 			
 							win.add(pb);
 							pb.show();
 							xhr.onload = function()
@@ -411,22 +580,7 @@ photoButton.addEventListener('click', function(e)
     				top: -37,
     				left: 55,
 				});
-				var labelTitle2 = Titanium.UI.createLabel({
-    				text:'Add a message and share',
-    				font:{fontSize:12},
-    				color:'#000',
-    				box: true,
-   					width:'auto',
-    				textAlign:'center',
-    				left: 55
-				});
-				var seperatorPhone = Ti.UI.createView({
-					backgroundColor: "#808080",
-					width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 10,
-					top: 7,
-					box: true,
-					height:2,
-				});
+				
 				var pict = Titanium.UI.createImageView({
 					image: Titanium.App.Properties.getString("photo_url"),
 					top: 10,
@@ -531,15 +685,13 @@ photoButton.addEventListener('click', function(e)
     	allowImageEditing:true,
 	});
 });
-var videoButton = Ti.UI.createButton(
-{
-    title: 'Video',
-   	toggle:false,
-    font:{fontSize:18,fontWeight:'bold'},
-   	height:'37dp',
-    width:200,
-	top: 10
-});
+
+
+
+
+
+
+
 videoButton.addEventListener('click', function(e)
 {
 	var record = true
@@ -570,8 +722,7 @@ videoButton.addEventListener('click', function(e)
         } else {
             if (e.resultCode === Titanium.Android.RESULT_OK) {
                 videoUri = e.intent.data;
-                var win_height = 380;
-   				var win_width = Ti.Platform.displayCaps.platformWidth * .85;
+
  				var view = Ti.UI.createView(
     			{
         			backgroundColor : '#e2e7ed',
@@ -761,15 +912,6 @@ videoButton.addEventListener('click', function(e)
 	}
 });
 		
-		var voiceButton = Ti.UI.createButton({
-    		title: 'Voice',
-   			 toggle:false,
-    		height: 30,
-    		width:200,
-
-			top: 10
-		});
-		
 
 
 		   		 var labelTitle = Titanium.UI.createLabel({
@@ -793,13 +935,7 @@ videoButton.addEventListener('click', function(e)
     			left: '55dp',
  
 			});
-		var seperatorPhone = Ti.UI.createView({
-				backgroundColor: "#808080",
-				width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 10,
-				top: 7,
-				box: true,
-				height:2,
-			});
+
 			var pict = Titanium.UI.createImageView({
 				image: Titanium.App.Properties.getString("photo_url"),
 				top: 10,
@@ -822,29 +958,7 @@ videoButton.addEventListener('click', function(e)
 
 
 
-var winModal = Ti.UI.createWindow({
-        backgroundColor : '#B0000000',
-        visible: false
-    });
-        	var win_height = 380;
-   		var win_width = Ti.Platform.displayCaps.platformWidth * .85;
- 
-    	var view = Ti.UI.createView({
-        	backgroundColor : '#e2e7ed',
-        	borderColor : '#A5A5A5',
-        	box: true,
-        	borderRadius : 15,
-        	top: 50,
-        	layout: 'vertical',
-        	borderWidth : 2,
-        	width : win_width,
-        	height : win_height
-   		 });
-   		 var modalTableView = Titanium.UI.createTableView({
-			backgroundColor:'#e2e7ed',
-			box: true
-		});
-		
+
 		modalTableView.addEventListener('click', function(e){			
 			xhr = postNotificationMarkAsRead(Titanium.App.Properties.getString("mmat"),e.source.notification_id);
 			xhr.onload = function(){
@@ -894,13 +1008,7 @@ var winModal = Ti.UI.createWindow({
     			left: '55dp',
  
 			});
-		var seperatorPhone = Ti.UI.createView({
-				backgroundColor: "#808080",
-				width:(Titanium.Platform.displayCaps.platformWidth * .85 ) - 10,
-				top: 7,
-				box: true,
-				height:2,
-			});
+
 			var pict = Titanium.UI.createImageView({
 				image: Titanium.App.Properties.getString("photo_url"),
 				top: 10,
@@ -916,24 +1024,27 @@ var winModal = Ti.UI.createWindow({
 		 view.add(modalTableView);
    		 winModal.add(view);
         var loadingTemplate = {
-        	childTemplates: [
-        	{
-            type: 'Ti.UI.Label', // Use a label
-            bindId: 'loadingLabel',  // Bind ID for this label
-            properties: {        // Sets the Label.left property
-                left: 80,
-                top: 15,
-                textAlign:'left',
-                text: 'Loading',
-                backgroundColor:'#ecfaff',
-				height:'auto',
-                color:'#46a546',
-				font:{fontWeight:'bold',fontSize:20}
-            },
-        }
+		        	childTemplates: [
+		        	{
+			            type: 'Ti.UI.Label', // Use a label
+			            bindId: 'loadingLabel',  // Bind ID for this label
+			            properties: {        // Sets the Label.left property
+		                left: 80,
+		                top: 15,
+		                textAlign:'left',
+		                text: 'Loading',
+		                backgroundColor:'#ecfaff',
+						height:'auto',
+		                color:'#46a546',
+						font:{fontWeight:'bold',fontSize:20}
+		            },
+		        }
         	]
         }
 
+
+
+		//FEED DATA, TEMPLATE
    		 var plainTemplate = {
     childTemplates: [
         {
@@ -1110,14 +1221,9 @@ var winModal = Ti.UI.createWindow({
         }
     ]
 };
-var listView = Titanium.UI.createListView({
-	backgroundColor:'#46a546',
-	templates: { 'plain': plainTemplate, 'loading': loadingTemplate },
-	separatorStyle: 'none',
-	separatorColor: 'transparent',
-	defaultItemTemplate: 'plain',
-	top:'44dp'
-});
+
+
+
 var section = Ti.UI.createListSection();
 
 Titanium.App.addEventListener('nav-menu-button-toggle', function(e)
@@ -1142,11 +1248,7 @@ xhr.onload = function(){
 	var response = this.responseText;
 	user = JSON.parse(response);
 	if(user.unread.length > 0){
-		var notificationButton = Ti.UI.createButton({
-    		backgroundImage:'../images/bell-light.png',
-    		height:'25dp',
-    		width:'25dp',
-		});
+
 		var label = Ti.UI.createLabel({
     		text: user.unread.length,
     		textAlign: "center",
@@ -1163,13 +1265,7 @@ xhr.onload = function(){
     		left: 15
     	});
     	notificationButton.add(label);
-	} else {
-		var notificationButton = Ti.UI.createButton({
-    		backgroundImage:'../images/bell.png',
-    		height:'25dp',
-    		width:'25dp',
-		});
-	}
+	} 
 	bar.add(notificationButton);
 	win.title = "Feed";
 		for (var i = 0; i < user.unread.length; ++i) {
@@ -1293,30 +1389,12 @@ var brainlabel = [];
 
 var lastRow = 0;
 
-var border = Ti.UI.createView({
-	backgroundColor:"#576c89",
-	height:2,
-	bottom:0
-});
-
-var tableHeader = Ti.UI.createView({
-	backgroundColor:"#e2e7ed",
-	width:320,
-	height:60
-});
 
 // fake it til ya make it..  create a 2 pixel
 // bottom border
 tableHeader.add(border);
 
-var arrow = Ti.UI.createView({
-	backgroundImage:"../images/whiteArrow.png",
-	width:23,
-	height:60,
-	bottom:10,
-	left:20
-});
- 
+
 var statusLabel = Ti.UI.createLabel({
 	text:"Pull to reload",
 	left:55,
@@ -1360,6 +1438,9 @@ var statusLabel2 = Ti.UI.createLabel({
 	shadowColor:"#999",
 	shadowOffset:{x:0,y:1}
 });
+
+
+
 var actInd2 = Titanium.UI.createActivityIndicator({
 	left:20,
 	bottom:13,
@@ -1457,12 +1538,32 @@ win.addEventListener('focus', function()
 });
 
 var lastDistance = 0;
+
+
+
 listView.addEventListener('scroll',function(evt)
 {
+	
+	Titanium.API.info('scroll');
+
 	 if (!pulling && !updating && !reloading && (evt.totalItemCount < evt.firstVisibleItem + evt.visibleItemCount + 3) && (row.length>=10)) {
+	 	Titanium.API.info('update');
         beginUpdate();
-    }
+	}else{
+		
+		Titanium.API.info('pulling: ' + pulling.toString());
+		Titanium.API.info('updating: ' + updating.toString());    		
+		Titanium.API.info('reloading: ' + (evt.totalItemCount < evt.firstVisibleItem + evt.visibleItemCount + 3).toString());    		
+		Titanium.API.info('(row.length>=10): ' + (row.length>=10).toString());    		
+		
+		
+		
+	}
 });
+
+Titanium.API.info('SCROLL LISTENER ADDED*******************');
+
+
 
 function beginUpdate()
 {
@@ -1562,6 +1663,9 @@ var backHolder = []
 var seperatorPhone  = [];
 var comment  = [];
 var g = 0;
+
+
+
 function onLoad(response){
 	var d = new Date();
 	row = JSON.parse(response);
@@ -1569,6 +1673,12 @@ function onLoad(response){
 		g = 0;
 	}
 	if (lastRow == 0){
+		
+		
+		
+		
+		
+		//FEED DATA
 	lastRow = (row.length);} else  {lastRow += row.length;}
        for(c=0;c<row.length;c++){
        		var post = row[c];
@@ -1772,6 +1882,8 @@ if (Titanium.Platform.osname == "iphone"){
             }
 			} else {
 
+
+			//FEED DATA
             row_data.push({
             	
             	listName : {text: rowtext, postid: post.id},
@@ -1809,15 +1921,18 @@ if (Titanium.Platform.osname == "iphone"){
    });
    function redirectToPost(e)
    {
-   	var win1 = Titanium.UI.createWindow({  
+   		var win1 = Titanium.UI.createWindow({  
     			url:'post.js',
   				backgroundColor:'#fff',
   				barColor: '#46a546',
   				fullscreen: true,
 				});
-				win1.postid = e.section.getItemAt(e.itemIndex).comment.postid;
-				win1.open();
+		win1.postid = e.section.getItemAt(e.itemIndex).comment.postid;
+		win1.open();
    }
+   
+   
+   
    function launchPic(e){
    	var url = e.section.getItemAt(e.itemIndex).picPict.url;
    	var picModal2 = Ti.UI.createWindow({
